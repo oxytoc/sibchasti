@@ -2,17 +2,17 @@ import { IsNumber, IsString } from "class-validator";
 
 export class CreatePartDto {
   @IsString()
-  readonly name: string;
+    name: string;
   @IsString()
-  readonly brand: string;
+    brand: string;
   @IsNumber()
-  readonly quantity: number;
+    quantity: number;
   @IsNumber()
-  readonly partCode: number;
+    partCode: number;
   @IsString()
-  readonly vin: string;
+    vin: string;
   @IsString()
-  readonly type: string;
+    type: string;
   @IsNumber()
-  readonly price: number;
+    price: number;
 }

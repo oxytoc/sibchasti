@@ -12,12 +12,6 @@ export class PartsManagerController {
     return this.partsManager.getAllParts();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id) {
-    const coffee = this.partsManager.findPart(id);
-    return coffee;
-  }
-
   @Post()
   @HttpCode(HttpStatus.GONE)
   create(@Body() createPartDto: CreatePartDto) {
