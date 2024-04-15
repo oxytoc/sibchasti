@@ -5,11 +5,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConnectionSource } from './dataSource';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { OrderManagerModule } from './order-manager/order-manager.module';
 
 @Module({
   imports: [
     PartsManagerModule,
-    TypeOrmModule.forRoot(ConnectionSource)
+    OrderManagerModule,
+    TypeOrmModule.forRoot(ConnectionSource),
   ],
   controllers: [AppController],
   providers: [AppService],

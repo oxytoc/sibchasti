@@ -3,26 +3,26 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 @Entity() //sql table === 'part'
 export class Part {
   @PrimaryGeneratedColumn()
-  id: number;
+    id: number;
 
   @Column()
-  brand: string;
+    brand: string;
 
   @Column()
-  name: string;
+    name: string;
 
   @Column()
-  quantity: number;
+    quantity: number;
 
   @Column()
-  partCode: number;
+    partCode: number;
 
   @Column()
-  vin: string;
+    vin: string;
 
   @Column()
-  type: string;
+    type: string;
 
   @Column()
-  price: number;
+    price: number;
 }
