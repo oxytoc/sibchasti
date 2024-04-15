@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 import { Order } from './entity/order.entity';
-import { Repository } from 'typeorm';
 import { Client } from 'src/client-manager/entity/client.entity';
 import { Part } from 'src/parts-manager/entity/part.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
