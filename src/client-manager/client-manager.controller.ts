@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ClientManagerService } from './client-manager.service';
 import { CreateClientDto } from './dto/create-client.dto';
 
-@Controller('client')
+@Controller('clients')
 export class ClientManagerController {
   constructor(private readonly clientService: ClientManagerService) { }
 

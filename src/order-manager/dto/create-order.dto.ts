@@ -1,4 +1,9 @@
-import { IsNumber, IsString } from "class-validator";
+import { IsArray, IsNumber, IsString, ValidateNested } from "class-validator";
+
+export interface PartQuantityInterface {
+  partId: string;
+  quantity: number;
+}
 
 export class CreateOrderDto {
   @IsString()
@@ -7,6 +12,7 @@ export class CreateOrderDto {
   @IsNumber()
     clientId: string;
 
-  @IsString({ each: true })
-    partsId: string[];
+  @IsArray()
+  @ValidateNested({ each: true })
+    partQuantity: PartQuantityInterface[];
 }

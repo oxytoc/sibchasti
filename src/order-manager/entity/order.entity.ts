@@ -1,7 +1,7 @@
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 import { Client } from "src/client-manager/entity/client.entity";
-import { Part } from "src/parts-manager/entity/part.entity";
+import { PartQuantity } from "./PartQuantity.entity";
 
 @Entity()
 export class Order {
@@ -11,10 +11,10 @@ export class Order {
   @Column()
     orderDate: string;
 
-  @ManyToOne(() => Client, (client: Client) => client.orders)
+  @ManyToOne(() => Client, (client: Client) => client.orders, { eager: true })
     client: Client;
-  
-  @ManyToMany(() => Part)
+
   @JoinTable()
-    parts: Part[];
+  @ManyToMany(() => PartQuantity, (partQuantity: PartQuantity) => partQuantity.orders, { cascade: true, eager: true })
+    partQuantities: PartQuantity[];
 }

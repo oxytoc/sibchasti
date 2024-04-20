@@ -6,7 +6,7 @@ import { Order } from './entity/order.entity';
 import { Client } from 'src/client-manager/entity/client.entity';
 import { Part } from 'src/parts-manager/entity/part.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
+import { PartQuantity } from './entity/PartQuantity.entity';
 
 @Injectable()
 export class OrderManagerService {
@@ -14,6 +14,8 @@ export class OrderManagerService {
     @InjectRepository(Order) private readonly orderRepository: Repository<Order>,
     @InjectRepository(Client) private readonly clientRepository: Repository<Client>,
     @InjectRepository(Part) private readonly partRepository: Repository<Part>,
+    @InjectRepository(PartQuantity) private readonly partQuantityRepository: Repository<PartQuantity>,
+
   ) { }
 
   private async loadPartById(partId: number): Promise<Part> {
@@ -46,12 +48,25 @@ export class OrderManagerService {
     const client = await this.loadClientById(+orderDto.clientId);
 
     const parts = await Promise.all(
-      orderDto.partsId.map(p => this.loadPartById(+p))
+      orderDto.partQuantity
+        .map(p => this.loadPartById(+p.partId))
     );
+
+    parts.filter(part => {
+      const orderPart = orderDto.partQuantity.find(p => +p.partId === part.id);
+      return orderPart.quantity > 0 && part.quantity - orderPart.quantity >= 0;
+    });
+
+    const partQuantities: PartQuantity[] = await Promise.all(orderDto.partQuantity.map(pq => {
+      const part = parts.find(p => +pq.partId === p.id);
+      return this.partQuantityRepository.create({ part, quantity: pq.quantity  });
+    }));
+
+    //TODO: Change order entity to quantyty and part, alse change quantity in parts manager
 
     const order = this.orderRepository.create({
       orderDate: orderDto.orderDate,
-      parts,
+      partQuantities,
       client
     });
 
@@ -60,30 +75,11 @@ export class OrderManagerService {
     } catch (error) {
       throw new HttpException({
         status: HttpStatus.FORBIDDEN,
-        error: 'This is a custom message',
+        error: 'Internal server error',
       }, HttpStatus.FORBIDDEN, {
         cause: error
       });
     }
-  }
-
-  async updateOrder(id: string, orderDto: UpdateOrderDto): Promise<Order> {
-    const client = await this.loadClientById(+orderDto.clientId);
-
-    const parts = await Promise.all(
-      orderDto.partsId.map(p => this.loadPartById(+p))
-    );
-
-    const order = await this.orderRepository.preload({
-      id: +id,
-      parts: parts,
-      client: client
-    });
-
-    if (!order) {
-      throw new NotFoundException(`Order ${id} not found`);
-    }
-    return this.partRepository.save(order);
   }
 
   async deleteOrder(id: string): Promise<Order> {
@@ -93,6 +89,6 @@ export class OrderManagerService {
   }
 
   getAllOrders(): Promise<Order[]> {
-    return this.orderRepository.find({});
+    return this.orderRepository.find();
   }
 }
