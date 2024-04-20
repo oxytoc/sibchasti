@@ -30,11 +30,15 @@
 
 ```bash
 $ npm install
+$ docker install
+$ docker-compose install
 ```
 
 ## Running the app
 
 ```bash
+# load db
+$ docker-compose up
 # development
 $ npm run start
 
