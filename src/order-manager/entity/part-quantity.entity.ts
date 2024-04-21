@@ -11,9 +11,9 @@ export class PartQuantity {
   @Column()
     quantity: number;
   
-  @ManyToOne(() => Part, (part: Part) => part.PartQuantities, { eager: true })
+  @ManyToOne(() => Part, (part: Part) => part.partQuantities, { eager: true })
     part: Part;
 
   @ManyToMany(() => Order, (order: Order) => order.partQuantities)
-    orders: Order;
+    orders: Order[];
 }

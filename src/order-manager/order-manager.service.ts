@@ -6,7 +6,7 @@ import { Order } from './entity/order.entity';
 import { Client } from 'src/client-manager/entity/client.entity';
 import { Part } from 'src/parts-manager/entity/part.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { PartQuantity } from './entity/PartQuantity.entity';
+import { PartQuantity } from './entity/part-quantity.entity';
 
 @Injectable()
 export class OrderManagerService {
@@ -62,10 +62,7 @@ export class OrderManagerService {
       return this.partQuantityRepository.create({ part, quantity: pq.quantity  });
     }));
 
-    //TODO: Change order entity to quantyty and part, alse change quantity in parts manager
-
     const order = this.orderRepository.create({
-      orderDate: orderDto.orderDate,
       partQuantities,
       client
     });

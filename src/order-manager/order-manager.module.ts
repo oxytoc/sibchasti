@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Order } from './entity/order.entity';
 import { Client } from 'src/client-manager/entity/client.entity';
 import { Part } from 'src/parts-manager/entity/part.entity';
-import { PartQuantity } from './entity/PartQuantity.entity';
+import { PartQuantity } from './entity/part-quantity.entity';
 
 @Module({
   imports: [

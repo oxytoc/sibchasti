@@ -1,14 +1,14 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 import { Client } from "src/client-manager/entity/client.entity";
-import { PartQuantity } from "./PartQuantity.entity";
+import { PartQuantity } from "./part-quantity.entity";
 
 @Entity()
 export class Order {
   @PrimaryGeneratedColumn()
     id: number;
 
-  @Column()
+  @CreateDateColumn()
     orderDate: string;
 
   @ManyToOne(() => Client, (client: Client) => client.orders, { eager: true })

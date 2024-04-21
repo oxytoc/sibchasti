@@ -1,4 +1,4 @@
-import { PartQuantity } from "src/order-manager/entity/PartQuantity.entity";
+import { PartQuantity } from "src/order-manager/entity/part-quantity.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity() //sql table === 'part'
@@ -28,5 +28,5 @@ export class Part {
     price: number;
   
   @OneToMany(() => PartQuantity, (partQuantity: PartQuantity) => partQuantity.part)
-    PartQuantities: PartQuantity[];
+    partQuantities: PartQuantity[];
 }
