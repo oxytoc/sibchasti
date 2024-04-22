@@ -3,7 +3,7 @@ import { CreatePartDto } from './dto/create-part.dto';
 import { PartsManagerService } from './parts-manager.service';
 import { UpdatePartDto } from './dto/update-part.dto';
 
-@Controller('parts')
+@Controller('')
 export class PartsManagerController {
   constructor(private partsManager: PartsManagerService) { }
 

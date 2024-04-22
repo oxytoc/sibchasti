@@ -2,7 +2,7 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Post } from '@nestjs/commo
 import { PopularPartsService } from './popular-parts.service';
 import { CreatePopularPartDto } from './dto/create-popolar-part.dto';
 
-@Controller('popularParts')
+@Controller('')
 export class PopularPartsController {
   constructor(private readonly popularPartsService: PopularPartsService) { }
 
