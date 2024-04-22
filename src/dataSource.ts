@@ -2,14 +2,14 @@ import { DataSource, DataSourceOptions } from "typeorm";
 
 export const ConnectionSource: DataSourceOptions = {
   type: 'postgres',
-  host: 'localhost',
+  host: 'db',
   port: 5432,
   username: 'postgres',
   password: 'postgres',
   database: 'postgres',
   entities: ['dist/**/*.entity.js'],
   // disable in production
-  synchronize: true,
+  synchronize: false,
 };
 
 const dataSource = new DataSource(ConnectionSource);

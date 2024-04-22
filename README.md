@@ -37,16 +37,8 @@ $ docker-compose install
 ## Running the app
 
 ```bash
-# load db
+# load db, pgadmin4, app
 $ docker-compose up
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
 
 ## Test
