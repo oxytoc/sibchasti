@@ -1,0 +1,1700 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+  <head>
+    <title>auto-service entity specification</title>
+    <meta charset="utf-8" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      .bd-aside a {
+        padding: 0.1875rem 0.5rem;
+        margin-top: 0.125rem;
+        margin-left: 0.3125rem;
+        color: var(--bs-body-color);
+      }
+
+      .bd-aside a:hover,
+      .bd-aside a:focus {
+        color: var(--bs-body-color);
+        background-color: rgba(121, 82, 179, 0.1);
+      }
+
+      .bd-aside .active {
+        font-weight: 600;
+        color: var(--bs-body-color);
+      }
+
+      .bd-aside .btn {
+        padding: 0.25rem 0.5rem;
+        font-weight: 600;
+        color: var(--bs-body-color);
+      }
+
+      .bd-aside .btn:hover,
+      .bd-aside .btn:focus {
+        color: var(--bs-body-color);
+        background-color: rgba(121, 82, 179, 0.1);
+      }
+
+      .bd-aside .btn:focus {
+        box-shadow: 0 0 0 1px rgba(121, 82, 179, 0.7);
+      }
+
+      .bd-aside .btn::before {
+        width: 1.25em;
+        line-height: 0;
+        content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ccc' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
+        transition: transform 0.35s ease;
+
+        /* rtl:raw:
+    transform: rotate(180deg) translateX(-2px);
+    */
+        transform-origin: 0.5em 50%;
+      }
+
+      .bd-aside .btn[aria-expanded="true"]::before {
+        transform: rotate(90deg) /* rtl:ignore */;
+      }
+
+      /* Layout */
+      @media (min-width: 1200px) {
+        html {
+          scroll-padding-top: 4rem;
+        }
+
+        body {
+          display: grid;
+          grid-template-rows: auto;
+          grid-template-columns: 4fr 1fr;
+          gap: 1rem;
+        }
+
+        .bd-header {
+          position: fixed;
+          top: 0;
+          /* rtl:begin:ignore */
+          right: 0;
+          left: 0;
+          /* rtl:end:ignore */
+          z-index: 1030;
+          grid-column: 1 / span 3;
+        }
+
+        .bd-aside,
+        .bd-cheatsheet {
+          padding-top: 4rem;
+        }
+
+        /**
+      * 1. Too bad only Firefox supports subgrids ATM
+      */
+        .bd-cheatsheet,
+        .bd-cheatsheet section,
+        .bd-cheatsheet article {
+          display: inherit; /* 1 */
+          grid-template-rows: auto;
+          grid-template-columns: 4fr;
+          grid-column: 1 / span 2;
+          gap: inherit; /* 1 */
+        }
+
+        .bd-aside {
+          grid-area: 1 / 3;
+          scroll-margin-top: 4rem;
+        }
+
+        .bd-cheatsheet section,
+        .bd-cheatsheet section > h2 {
+          top: 2rem;
+          scroll-margin-top: 2rem;
+        }
+
+        .bd-cheatsheet section > h2::before {
+          position: absolute;
+          /* rtl:begin:ignore */
+          top: 0;
+          right: 0;
+          bottom: -2rem;
+          left: 0;
+          /* rtl:end:ignore */
+          z-index: -1;
+          content: "";
+        }
+
+        .bd-cheatsheet article,
+        .bd-cheatsheet .bd-heading {
+          top: 8rem;
+          scroll-margin-top: 8rem;
+        }
+
+        .bd-cheatsheet .bd-heading {
+          z-index: 1;
+        }
+      }
+
+      .hide {
+        display: none !important;
+      }
+
+      .mermaid-box {
+        height: 60vh;
+        min-height: 600px;
+        width: 85vw;
+      }
+
+      .mermaid {
+        height: 60vh;
+        min-height: 600px;
+        width: 85vw;
+        overflow: hidden;
+
+        svg {
+          height: 100% !important;
+          width: 100% !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="bg-body-tertiary">
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">auto-service</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarCollapse"
+          aria-controls="navbarCollapse"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/">Entity</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="mermaid.html">ER Diagram</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <aside
+      class="bd-aside sticky-xl-top text-body-secondary align-self-start mb-3 mb-xl-5 px-2"
+    >
+      <section class="entity-version-toc-section toc-auto-service-0-0-1">
+        <h2 class="h6 pt-4 pb-3 mb-4 border-bottom">0.0.1</h2>
+        <nav id="toc-0-0-1" class="small">
+          <ul class="list-unstyled">
+            <li class="my-2">
+              <a
+                class="anchor-link"
+                href="#0-0-1-client-Client"
+                aria-label="Link to this section: client(Client)"
+              >
+                client
+              </a>
+            </li>
+            <li class="my-2">
+              <a
+                class="anchor-link"
+                href="#0-0-1-order-Order"
+                aria-label="Link to this section: order(Order)"
+              >
+                order
+              </a>
+            </li>
+            <li class="my-2">
+              <a
+                class="anchor-link"
+                href="#0-0-1-part_quantity-PartQuantity"
+                aria-label="Link to this section: part_quantity(PartQuantity)"
+              >
+                part_quantity
+              </a>
+            </li>
+            <li class="my-2">
+              <a
+                class="anchor-link"
+                href="#0-0-1-part-Part"
+                aria-label="Link to this section: part(Part)"
+              >
+                part
+              </a>
+            </li>
+            <li class="my-2">
+              <a
+                class="anchor-link"
+                href="#0-0-1-popular_part-PopularPart"
+                aria-label="Link to this section: popular_part(PopularPart)"
+              >
+                popular_part
+              </a>
+            </li>
+            <li class="my-2">
+              <a
+                class="anchor-link"
+                href="#0-0-1-order_part_quantities_part_quantity-order_part_quantities_part_quantity"
+                aria-label="Link to this section: order_part_quantities_part_quantity(order_part_quantities_part_quantity)"
+              >
+                order_part_quantities_part_quantity
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </section>
+    </aside>
+
+    <div class="bd-cheatsheet container-fluid bg-body">
+      <section>
+        <select
+          id="entity-version-select"
+          class="form-select form-select-lg mb-3"
+          aria-label="Large select example"
+        >
+          <option value="auto-service-0-0-1" selected>
+            auto-service 0.0.1
+          </option>
+        </select>
+      </section>
+
+      <section
+        class="entity-version-content-section content-auto-service-0-0-1"
+      >
+        <h2>auto-service 0.0.1</h2>
+        <div class="container-fluid">
+          <div class="container-fluid">
+            <h2 id="0-0-1-client-Client" class="title is-3">
+              client <small class="text-body-secondary">(Client)</small>
+              <a
+                class="anchor-link"
+                href="#0-0-1-client-Client"
+                aria-label="Link to this section: client(Client)"
+                >#</a
+              >
+            </h2>
+
+            <div class="container-fluid">
+              <table class="table table-striped table-hover caption-top">
+                <caption>
+                  <i class="bi bi-grid-3x2-gap"></i>
+                  client<small class="text-body-secondary">(Client)</small>
+                  columns
+                </caption>
+                <thead>
+                  <tr>
+                    <th>&nbsp;</th>
+                    <!-- changing status -->
+                    <th>Database Name</th>
+                    <th>Property Name</th>
+                    <th>Attribute</th>
+                    <th>Type</th>
+                    <th>Nullable</th>
+                    <th>Charset</th>
+                    <th>Comment</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td></td>
+
+                    <td id="0-0-1-client-Client-id">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-client-Client-id"
+                        aria-label="Link to this section: id in client(Client)"
+                        >#</a
+                      >
+                      <span>id</span>
+                    </td>
+
+                    <td id="0-0-1-client-Client-id">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-client-Client-id"
+                        aria-label="Link to this section: id in client(Client)"
+                        >#</a
+                      >
+                      <span>id</span>
+                    </td>
+
+                    <td>
+                      <span class="badge text-bg-success">PK</span>
+                    </td>
+
+                    <td>
+                      <span>*number</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span></span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+
+                    <td id="0-0-1-client-Client-firstName">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-client-Client-firstName"
+                        aria-label="Link to this section: firstName in client(Client)"
+                        >#</a
+                      >
+                      <span>firstName</span>
+                    </td>
+
+                    <td id="0-0-1-client-Client-firstName">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-client-Client-firstName"
+                        aria-label="Link to this section: firstName in client(Client)"
+                        >#</a
+                      >
+                      <span>firstName</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span>*string</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span></span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+
+                    <td id="0-0-1-client-Client-secondName">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-client-Client-secondName"
+                        aria-label="Link to this section: secondName in client(Client)"
+                        >#</a
+                      >
+                      <span>secondName</span>
+                    </td>
+
+                    <td id="0-0-1-client-Client-secondName">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-client-Client-secondName"
+                        aria-label="Link to this section: secondName in client(Client)"
+                        >#</a
+                      >
+                      <span>secondName</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span>*string</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span></span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+
+                    <td id="0-0-1-client-Client-thirdName">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-client-Client-thirdName"
+                        aria-label="Link to this section: thirdName in client(Client)"
+                        >#</a
+                      >
+                      <span>thirdName</span>
+                    </td>
+
+                    <td id="0-0-1-client-Client-thirdName">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-client-Client-thirdName"
+                        aria-label="Link to this section: thirdName in client(Client)"
+                        >#</a
+                      >
+                      <span>thirdName</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span>*string</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span></span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+
+                    <td id="0-0-1-client-Client-phoneNumber">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-client-Client-phoneNumber"
+                        aria-label="Link to this section: phoneNumber in client(Client)"
+                        >#</a
+                      >
+                      <span>phoneNumber</span>
+                    </td>
+
+                    <td id="0-0-1-client-Client-phoneNumber">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-client-Client-phoneNumber"
+                        aria-label="Link to this section: phoneNumber in client(Client)"
+                        >#</a
+                      >
+                      <span>phoneNumber</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span>*string</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span></span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="mx-auto p-2" style="width: 100%"></div>
+
+            <div class="container-fluid"></div>
+            <div class="mx-auto p-4" style="width: 100%"></div>
+          </div>
+          <div class="container-fluid">
+            <h2 id="0-0-1-order-Order" class="title is-3">
+              order <small class="text-body-secondary">(Order)</small>
+              <a
+                class="anchor-link"
+                href="#0-0-1-order-Order"
+                aria-label="Link to this section: order(Order)"
+                >#</a
+              >
+            </h2>
+
+            <div class="container-fluid">
+              <table class="table table-striped table-hover caption-top">
+                <caption>
+                  <i class="bi bi-grid-3x2-gap"></i>
+                  order<small class="text-body-secondary">(Order)</small>
+                  columns
+                </caption>
+                <thead>
+                  <tr>
+                    <th>&nbsp;</th>
+                    <!-- changing status -->
+                    <th>Database Name</th>
+                    <th>Property Name</th>
+                    <th>Attribute</th>
+                    <th>Type</th>
+                    <th>Nullable</th>
+                    <th>Charset</th>
+                    <th>Comment</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td></td>
+
+                    <td id="0-0-1-order-Order-id">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-order-Order-id"
+                        aria-label="Link to this section: id in order(Order)"
+                        >#</a
+                      >
+                      <span>id</span>
+                    </td>
+
+                    <td id="0-0-1-order-Order-id">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-order-Order-id"
+                        aria-label="Link to this section: id in order(Order)"
+                        >#</a
+                      >
+                      <span>id</span>
+                    </td>
+
+                    <td>
+                      <span class="badge text-bg-success">PK</span>
+                    </td>
+
+                    <td>
+                      <span>*number</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span></span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+
+                    <td id="0-0-1-order-Order-orderDate">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-order-Order-orderDate"
+                        aria-label="Link to this section: orderDate in order(Order)"
+                        >#</a
+                      >
+                      <span>orderDate</span>
+                    </td>
+
+                    <td id="0-0-1-order-Order-orderDate">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-order-Order-orderDate"
+                        aria-label="Link to this section: orderDate in order(Order)"
+                        >#</a
+                      >
+                      <span>orderDate</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span>*timestamp</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span></span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+
+                    <td id="0-0-1-order-Order-clientId">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-order-Order-clientId"
+                        aria-label="Link to this section: clientId in order(Order)"
+                        >#</a
+                      >
+                      <span>clientId</span>
+                    </td>
+
+                    <td id="0-0-1-order-Order-client">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-order-Order-client"
+                        aria-label="Link to this section: client in order(Order)"
+                        >#</a
+                      >
+                      <span>client</span>
+                    </td>
+
+                    <td>
+                      <span class="badge text-bg-info">FK</span>
+                    </td>
+
+                    <td>
+                      <span>number</span>
+                    </td>
+
+                    <td>
+                      <span class="badge text-bg-danger">NULLABLE</span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="mx-auto p-2" style="width: 100%"></div>
+
+            <div class="container-fluid"></div>
+            <div class="mx-auto p-4" style="width: 100%"></div>
+          </div>
+          <div class="container-fluid">
+            <h2 id="0-0-1-part_quantity-PartQuantity" class="title is-3">
+              part_quantity
+              <small class="text-body-secondary">(PartQuantity)</small>
+              <a
+                class="anchor-link"
+                href="#0-0-1-part_quantity-PartQuantity"
+                aria-label="Link to this section: part_quantity(PartQuantity)"
+                >#</a
+              >
+            </h2>
+
+            <div class="container-fluid">
+              <table class="table table-striped table-hover caption-top">
+                <caption>
+                  <i class="bi bi-grid-3x2-gap"></i>
+                  part_quantity<small class="text-body-secondary"
+                    >(PartQuantity)</small
+                  >
+                  columns
+                </caption>
+                <thead>
+                  <tr>
+                    <th>&nbsp;</th>
+                    <!-- changing status -->
+                    <th>Database Name</th>
+                    <th>Property Name</th>
+                    <th>Attribute</th>
+                    <th>Type</th>
+                    <th>Nullable</th>
+                    <th>Charset</th>
+                    <th>Comment</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td></td>
+
+                    <td id="0-0-1-part_quantity-PartQuantity-id">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-part_quantity-PartQuantity-id"
+                        aria-label="Link to this section: id in part_quantity(PartQuantity)"
+                        >#</a
+                      >
+                      <span>id</span>
+                    </td>
+
+                    <td id="0-0-1-part_quantity-PartQuantity-id">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-part_quantity-PartQuantity-id"
+                        aria-label="Link to this section: id in part_quantity(PartQuantity)"
+                        >#</a
+                      >
+                      <span>id</span>
+                    </td>
+
+                    <td>
+                      <span class="badge text-bg-success">PK</span>
+                    </td>
+
+                    <td>
+                      <span>*number</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span></span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+
+                    <td id="0-0-1-part_quantity-PartQuantity-quantity">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-part_quantity-PartQuantity-quantity"
+                        aria-label="Link to this section: quantity in part_quantity(PartQuantity)"
+                        >#</a
+                      >
+                      <span>quantity</span>
+                    </td>
+
+                    <td id="0-0-1-part_quantity-PartQuantity-quantity">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-part_quantity-PartQuantity-quantity"
+                        aria-label="Link to this section: quantity in part_quantity(PartQuantity)"
+                        >#</a
+                      >
+                      <span>quantity</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span>*number</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span></span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+
+                    <td id="0-0-1-part_quantity-PartQuantity-partId">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-part_quantity-PartQuantity-partId"
+                        aria-label="Link to this section: partId in part_quantity(PartQuantity)"
+                        >#</a
+                      >
+                      <span>partId</span>
+                    </td>
+
+                    <td id="0-0-1-part_quantity-PartQuantity-part">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-part_quantity-PartQuantity-part"
+                        aria-label="Link to this section: part in part_quantity(PartQuantity)"
+                        >#</a
+                      >
+                      <span>part</span>
+                    </td>
+
+                    <td>
+                      <span class="badge text-bg-info">FK</span>
+                    </td>
+
+                    <td>
+                      <span>number</span>
+                    </td>
+
+                    <td>
+                      <span class="badge text-bg-danger">NULLABLE</span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="mx-auto p-2" style="width: 100%"></div>
+
+            <div class="container-fluid"></div>
+            <div class="mx-auto p-4" style="width: 100%"></div>
+          </div>
+          <div class="container-fluid">
+            <h2 id="0-0-1-part-Part" class="title is-3">
+              part <small class="text-body-secondary">(Part)</small>
+              <a
+                class="anchor-link"
+                href="#0-0-1-part-Part"
+                aria-label="Link to this section: part(Part)"
+                >#</a
+              >
+            </h2>
+
+            <div class="container-fluid">
+              <table class="table table-striped table-hover caption-top">
+                <caption>
+                  <i class="bi bi-grid-3x2-gap"></i>
+                  part<small class="text-body-secondary">(Part)</small>
+                  columns
+                </caption>
+                <thead>
+                  <tr>
+                    <th>&nbsp;</th>
+                    <!-- changing status -->
+                    <th>Database Name</th>
+                    <th>Property Name</th>
+                    <th>Attribute</th>
+                    <th>Type</th>
+                    <th>Nullable</th>
+                    <th>Charset</th>
+                    <th>Comment</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td></td>
+
+                    <td id="0-0-1-part-Part-id">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-part-Part-id"
+                        aria-label="Link to this section: id in part(Part)"
+                        >#</a
+                      >
+                      <span>id</span>
+                    </td>
+
+                    <td id="0-0-1-part-Part-id">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-part-Part-id"
+                        aria-label="Link to this section: id in part(Part)"
+                        >#</a
+                      >
+                      <span>id</span>
+                    </td>
+
+                    <td>
+                      <span class="badge text-bg-success">PK</span>
+                    </td>
+
+                    <td>
+                      <span>*number</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span></span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+
+                    <td id="0-0-1-part-Part-brand">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-part-Part-brand"
+                        aria-label="Link to this section: brand in part(Part)"
+                        >#</a
+                      >
+                      <span>brand</span>
+                    </td>
+
+                    <td id="0-0-1-part-Part-brand">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-part-Part-brand"
+                        aria-label="Link to this section: brand in part(Part)"
+                        >#</a
+                      >
+                      <span>brand</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span>*string</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span></span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+
+                    <td id="0-0-1-part-Part-name">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-part-Part-name"
+                        aria-label="Link to this section: name in part(Part)"
+                        >#</a
+                      >
+                      <span>name</span>
+                    </td>
+
+                    <td id="0-0-1-part-Part-name">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-part-Part-name"
+                        aria-label="Link to this section: name in part(Part)"
+                        >#</a
+                      >
+                      <span>name</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span>*string</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span></span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+
+                    <td id="0-0-1-part-Part-quantity">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-part-Part-quantity"
+                        aria-label="Link to this section: quantity in part(Part)"
+                        >#</a
+                      >
+                      <span>quantity</span>
+                    </td>
+
+                    <td id="0-0-1-part-Part-quantity">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-part-Part-quantity"
+                        aria-label="Link to this section: quantity in part(Part)"
+                        >#</a
+                      >
+                      <span>quantity</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span>*number</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span></span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+
+                    <td id="0-0-1-part-Part-partCode">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-part-Part-partCode"
+                        aria-label="Link to this section: partCode in part(Part)"
+                        >#</a
+                      >
+                      <span>partCode</span>
+                    </td>
+
+                    <td id="0-0-1-part-Part-partCode">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-part-Part-partCode"
+                        aria-label="Link to this section: partCode in part(Part)"
+                        >#</a
+                      >
+                      <span>partCode</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span>*number</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span></span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+
+                    <td id="0-0-1-part-Part-vin">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-part-Part-vin"
+                        aria-label="Link to this section: vin in part(Part)"
+                        >#</a
+                      >
+                      <span>vin</span>
+                    </td>
+
+                    <td id="0-0-1-part-Part-vin">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-part-Part-vin"
+                        aria-label="Link to this section: vin in part(Part)"
+                        >#</a
+                      >
+                      <span>vin</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span>*string</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span></span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+
+                    <td id="0-0-1-part-Part-type">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-part-Part-type"
+                        aria-label="Link to this section: type in part(Part)"
+                        >#</a
+                      >
+                      <span>type</span>
+                    </td>
+
+                    <td id="0-0-1-part-Part-type">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-part-Part-type"
+                        aria-label="Link to this section: type in part(Part)"
+                        >#</a
+                      >
+                      <span>type</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span>*string</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span></span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+
+                    <td id="0-0-1-part-Part-price">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-part-Part-price"
+                        aria-label="Link to this section: price in part(Part)"
+                        >#</a
+                      >
+                      <span>price</span>
+                    </td>
+
+                    <td id="0-0-1-part-Part-price">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-part-Part-price"
+                        aria-label="Link to this section: price in part(Part)"
+                        >#</a
+                      >
+                      <span>price</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span>*number</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span></span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="mx-auto p-2" style="width: 100%"></div>
+
+            <div class="container-fluid"></div>
+            <div class="mx-auto p-4" style="width: 100%"></div>
+          </div>
+          <div class="container-fluid">
+            <h2 id="0-0-1-popular_part-PopularPart" class="title is-3">
+              popular_part
+              <small class="text-body-secondary">(PopularPart)</small>
+              <a
+                class="anchor-link"
+                href="#0-0-1-popular_part-PopularPart"
+                aria-label="Link to this section: popular_part(PopularPart)"
+                >#</a
+              >
+            </h2>
+
+            <div class="container-fluid">
+              <table class="table table-striped table-hover caption-top">
+                <caption>
+                  <i class="bi bi-grid-3x2-gap"></i>
+                  popular_part<small class="text-body-secondary"
+                    >(PopularPart)</small
+                  >
+                  columns
+                </caption>
+                <thead>
+                  <tr>
+                    <th>&nbsp;</th>
+                    <!-- changing status -->
+                    <th>Database Name</th>
+                    <th>Property Name</th>
+                    <th>Attribute</th>
+                    <th>Type</th>
+                    <th>Nullable</th>
+                    <th>Charset</th>
+                    <th>Comment</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td></td>
+
+                    <td id="0-0-1-popular_part-PopularPart-id">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-popular_part-PopularPart-id"
+                        aria-label="Link to this section: id in popular_part(PopularPart)"
+                        >#</a
+                      >
+                      <span>id</span>
+                    </td>
+
+                    <td id="0-0-1-popular_part-PopularPart-id">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-popular_part-PopularPart-id"
+                        aria-label="Link to this section: id in popular_part(PopularPart)"
+                        >#</a
+                      >
+                      <span>id</span>
+                    </td>
+
+                    <td>
+                      <span class="badge text-bg-success">PK</span>
+                    </td>
+
+                    <td>
+                      <span>*number</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span></span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+
+                    <td id="0-0-1-popular_part-PopularPart-errors">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-popular_part-PopularPart-errors"
+                        aria-label="Link to this section: errors in popular_part(PopularPart)"
+                        >#</a
+                      >
+                      <span>errors</span>
+                    </td>
+
+                    <td id="0-0-1-popular_part-PopularPart-errors">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-popular_part-PopularPart-errors"
+                        aria-label="Link to this section: errors in popular_part(PopularPart)"
+                        >#</a
+                      >
+                      <span>errors</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span>json</span>
+                    </td>
+
+                    <td>
+                      <span class="badge text-bg-danger">NULLABLE</span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+
+                    <td id="0-0-1-popular_part-PopularPart-timeSeries">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-popular_part-PopularPart-timeSeries"
+                        aria-label="Link to this section: timeSeries in popular_part(PopularPart)"
+                        >#</a
+                      >
+                      <span>timeSeries</span>
+                    </td>
+
+                    <td id="0-0-1-popular_part-PopularPart-timeSeries">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-popular_part-PopularPart-timeSeries"
+                        aria-label="Link to this section: timeSeries in popular_part(PopularPart)"
+                        >#</a
+                      >
+                      <span>timeSeries</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span>json</span>
+                    </td>
+
+                    <td>
+                      <span class="badge text-bg-danger">NULLABLE</span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+
+                    <td id="0-0-1-popular_part-PopularPart-predicts">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-popular_part-PopularPart-predicts"
+                        aria-label="Link to this section: predicts in popular_part(PopularPart)"
+                        >#</a
+                      >
+                      <span>predicts</span>
+                    </td>
+
+                    <td id="0-0-1-popular_part-PopularPart-predicts">
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-popular_part-PopularPart-predicts"
+                        aria-label="Link to this section: predicts in popular_part(PopularPart)"
+                        >#</a
+                      >
+                      <span>predicts</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span>json</span>
+                    </td>
+
+                    <td>
+                      <span class="badge text-bg-danger">NULLABLE</span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="mx-auto p-2" style="width: 100%"></div>
+
+            <div class="container-fluid"></div>
+            <div class="mx-auto p-4" style="width: 100%"></div>
+          </div>
+          <div class="container-fluid">
+            <h2
+              id="0-0-1-order_part_quantities_part_quantity-order_part_quantities_part_quantity"
+              class="title is-3"
+            >
+              order_part_quantities_part_quantity
+              <small class="text-body-secondary"
+                >(order_part_quantities_part_quantity)</small
+              >
+              <a
+                class="anchor-link"
+                href="#0-0-1-order_part_quantities_part_quantity-order_part_quantities_part_quantity"
+                aria-label="Link to this section: order_part_quantities_part_quantity(order_part_quantities_part_quantity)"
+                >#</a
+              >
+            </h2>
+
+            <div class="container-fluid">
+              <table class="table table-striped table-hover caption-top">
+                <caption>
+                  <i class="bi bi-grid-3x2-gap"></i>
+                  order_part_quantities_part_quantity<small
+                    class="text-body-secondary"
+                    >(order_part_quantities_part_quantity)</small
+                  >
+                  columns
+                </caption>
+                <thead>
+                  <tr>
+                    <th>&nbsp;</th>
+                    <!-- changing status -->
+                    <th>Database Name</th>
+                    <th>Property Name</th>
+                    <th>Attribute</th>
+                    <th>Type</th>
+                    <th>Nullable</th>
+                    <th>Charset</th>
+                    <th>Comment</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td></td>
+
+                    <td
+                      id="0-0-1-order_part_quantities_part_quantity-order_part_quantities_part_quantity-orderId"
+                    >
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-order_part_quantities_part_quantity-order_part_quantities_part_quantity-orderId"
+                        aria-label="Link to this section: orderId in order_part_quantities_part_quantity(order_part_quantities_part_quantity)"
+                        >#</a
+                      >
+                      <span>orderId</span>
+                    </td>
+
+                    <td
+                      id="0-0-1-order_part_quantities_part_quantity-order_part_quantities_part_quantity-orderId"
+                    >
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-order_part_quantities_part_quantity-order_part_quantities_part_quantity-orderId"
+                        aria-label="Link to this section: orderId in order_part_quantities_part_quantity(order_part_quantities_part_quantity)"
+                        >#</a
+                      >
+                      <span>orderId</span>
+                    </td>
+
+                    <td>
+                      <span class="badge text-bg-success">PK</span>
+                      <span class="badge text-bg-info">FK</span>
+                    </td>
+
+                    <td>
+                      <span>*number</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span></span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+
+                    <td
+                      id="0-0-1-order_part_quantities_part_quantity-order_part_quantities_part_quantity-partQuantityId"
+                    >
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-order_part_quantities_part_quantity-order_part_quantities_part_quantity-partQuantityId"
+                        aria-label="Link to this section: partQuantityId in order_part_quantities_part_quantity(order_part_quantities_part_quantity)"
+                        >#</a
+                      >
+                      <span>partQuantityId</span>
+                    </td>
+
+                    <td
+                      id="0-0-1-order_part_quantities_part_quantity-order_part_quantities_part_quantity-partQuantityId"
+                    >
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-order_part_quantities_part_quantity-order_part_quantities_part_quantity-partQuantityId"
+                        aria-label="Link to this section: partQuantityId in order_part_quantities_part_quantity(order_part_quantities_part_quantity)"
+                        >#</a
+                      >
+                      <span>partQuantityId</span>
+                    </td>
+
+                    <td>
+                      <span class="badge text-bg-success">PK</span>
+                      <span class="badge text-bg-info">FK</span>
+                    </td>
+
+                    <td>
+                      <span>*number</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <span></span>
+                    </td>
+
+                    <td>
+                      <span></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="mx-auto p-2" style="width: 100%"></div>
+
+            <div class="container-fluid">
+              <table class="table table-striped table-hover caption-top">
+                <caption>
+                  <i class="bi bi-key"></i>
+                  order_part_quantities_part_quantity<small
+                    class="text-body-secondary"
+                    >(order_part_quantities_part_quantity)</small
+                  >
+                  indices
+                </caption>
+                <thead>
+                  <tr>
+                    <th>&nbsp;</th>
+                    <!-- changing status -->
+                    <th>Database Name</th>
+                    <th>Property Name</th>
+                    <th>Unique</th>
+                    <th>Columns</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr>
+                    <td></td>
+
+                    <td
+                      id="0-0-1-order_part_quantities_part_quantity-order_part_quantities_part_quantity-IDX_c24d2ba29365af8b3d5308787a"
+                    >
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-order_part_quantities_part_quantity-order_part_quantities_part_quantity-IDX_c24d2ba29365af8b3d5308787a"
+                        aria-label="Link to this section: IDX_c24d2ba29365af8b3d5308787a in order_part_quantities_part_quantity(order_part_quantities_part_quantity)"
+                        >#</a
+                      >
+                      <span>IDX_c24d2ba29365af8b3d5308787a</span>
+                    </td>
+
+                    <td
+                      id="0-0-1-order_part_quantities_part_quantity-order_part_quantities_part_quantity-IDX_c24d2ba29365af8b3d5308787a"
+                    >
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-order_part_quantities_part_quantity-order_part_quantities_part_quantity-IDX_c24d2ba29365af8b3d5308787a"
+                        aria-label="Link to this section: IDX_c24d2ba29365af8b3d5308787a in order_part_quantities_part_quantity(order_part_quantities_part_quantity)"
+                        >#</a
+                      >
+                      <span>IDX_c24d2ba29365af8b3d5308787a</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <ul style="margin: 0">
+                        <li>orderId</li>
+                      </ul>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+
+                    <td
+                      id="0-0-1-order_part_quantities_part_quantity-order_part_quantities_part_quantity-IDX_ff82ebfb0d8ce791d0240058d1"
+                    >
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-order_part_quantities_part_quantity-order_part_quantities_part_quantity-IDX_ff82ebfb0d8ce791d0240058d1"
+                        aria-label="Link to this section: IDX_ff82ebfb0d8ce791d0240058d1 in order_part_quantities_part_quantity(order_part_quantities_part_quantity)"
+                        >#</a
+                      >
+                      <span>IDX_ff82ebfb0d8ce791d0240058d1</span>
+                    </td>
+
+                    <td
+                      id="0-0-1-order_part_quantities_part_quantity-order_part_quantities_part_quantity-IDX_ff82ebfb0d8ce791d0240058d1"
+                    >
+                      <a
+                        class="anchor-link"
+                        href="#0-0-1-order_part_quantities_part_quantity-order_part_quantities_part_quantity-IDX_ff82ebfb0d8ce791d0240058d1"
+                        aria-label="Link to this section: IDX_ff82ebfb0d8ce791d0240058d1 in order_part_quantities_part_quantity(order_part_quantities_part_quantity)"
+                        >#</a
+                      >
+                      <span>IDX_ff82ebfb0d8ce791d0240058d1</span>
+                    </td>
+
+                    <td></td>
+
+                    <td>
+                      <ul style="margin: 0">
+                        <li>partQuantityId</li>
+                      </ul>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="mx-auto p-4" style="width: 100%"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+
+  <script>
+    var so = document.getElementById("entity-version-select");
+
+    so.addEventListener("change", (e) => {
+      var sectionsForContentHide = document.getElementsByClassName(
+        "entity-version-content-section",
+      );
+      [].forEach.call(sectionsForContentHide, (element) => {
+        element.className = element.className
+          .split(" ")
+          .filter((className) => className !== "hide")
+          .concat(["hide"])
+          .join(" ");
+      });
+
+      var sectionsForTocHide = document.getElementsByClassName(
+        "entity-version-toc-section",
+      );
+      [].forEach.call(sectionsForTocHide, (element) => {
+        element.className = element.className
+          .split(" ")
+          .filter((className) => className !== "hide")
+          .concat(["hide"])
+          .join(" ");
+      });
+
+      var sectionsForContentReveal = document.querySelector(
+        ".content-" + e.target.value,
+      );
+      sectionsForContentReveal.className = sectionsForContentReveal.className
+        .split(" ")
+        .filter((className) => className !== "hide")
+        .join(" ");
+
+      var sectionsForTocReveal = document.querySelector(
+        ".toc-" + e.target.value,
+      );
+      sectionsForTocReveal.className = sectionsForTocReveal.className
+        .split(" ")
+        .filter((className) => className !== "hide")
+        .join(" ");
+    });
+  </script>
+</html>
