@@ -1,0 +1,26 @@
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.spinner-container {
+  mat-spinner {
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+  }
+}
+
+.filter {
+  width: 100vw;
+}
+
+.mat-mdc-button-base {
+  margin: 8px 8px 8px 0;
+}
+
+.toolbar {
+  margin: 0 10px;
+}

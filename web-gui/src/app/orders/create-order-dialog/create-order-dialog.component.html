@@ -1,0 +1,48 @@
+<h2 mat-dialog-title>Создать клиента</h2>
+
+<mat-dialog-content>
+  <mat-spinner *ngIf="isLoading$ | async"></mat-spinner>
+
+  <form [formGroup]="form" *ngIf="(isLoading$ | async) === false">
+    <mat-form-field>
+      <mat-label>Выбрать клиента</mat-label>
+      <mat-select formControlName="clientId">
+        <mat-option *ngFor="let client of clients" [value]="client.id">{{ client.secondName + ' ' + client.firstName }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div formArrayName="partQuantity">
+      <button mat-button (click)="addPartQuantity()">
+        <span>Добавить</span>
+        <mat-icon>add</mat-icon>
+      </button>
+
+      <div *ngFor="let pq of partQuantityGroups; let i=index">
+        <div class="flex" [formGroupName]="i">
+          <mat-form-field>
+            <mat-label>Выбрать запчасть</mat-label>
+            <mat-select formControlName="partId">
+              <mat-option *ngFor="let part of parts" [value]="part.id">{{ part.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Колличество</mat-label>
+            <input matInput formControlName="quantity" type="number">
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Отмена</button>
+  <button mat-button
+      color="primary"
+      [disabled]="isSavingDisable()"
+      (click)="createOrder()">
+    Создать
+  </button>
+</mat-dialog-actions>

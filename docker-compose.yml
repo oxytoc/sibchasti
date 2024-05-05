@@ -13,7 +13,7 @@ services:
 
   app:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
     container_name: nest-docker-postgres
     ports:
@@ -21,7 +21,17 @@ services:
     depends_on:
       - db
     volumes:
-      - ./src:/app/src
+      - ./src:/app/backend/src
+
+  # web-gui:
+  #   build:
+  #     context: ./web-gui
+  #     dockerfile: Dockerfile
+  #   container_name: web-gui
+  #   ports:
+  #     - '4300:4300'
+  #   volumes:
+  #     - ./src:/app/web-gui/src
 
   pgadmin:
     image: dpage/pgadmin4
