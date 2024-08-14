@@ -21,7 +21,7 @@ services:
     depends_on:
       - db
     volumes:
-      - ./src:/app/backend/src
+      - ./backend/src:/app/backend/src
 
   # web-gui:
   #   build:
@@ -29,9 +29,9 @@ services:
   #     dockerfile: Dockerfile
   #   container_name: web-gui
   #   ports:
-  #     - '4300:4300'
+  #     - '4200:4200'
   #   volumes:
-  #     - ./src:/app/web-gui/src
+  #     - ./web-gui/src:/app/web-gui/src
 
   pgadmin:
     image: dpage/pgadmin4
