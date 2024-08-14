@@ -29,3 +29,9 @@ export interface PartQuantity {
   partId: number;
 }
 
+export interface PredictParts {
+  timeSeries: number[];
+  predicts: number[];
+  errors: number[];
+}
+

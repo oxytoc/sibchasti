@@ -17,7 +17,14 @@
       [active]="rlaOrders.isActive">
     Заказы
   </a>
+  <a  mat-tab-link
+    routerLink="/popular-parts"
+    routerLinkActive #rlaPopParts="routerLinkActive"
+    [active]="rlaPopParts.isActive">
+  Популярные запчасти
+</a>
 </nav>
+
 <mat-tab-nav-panel #tabPanel>
   <router-outlet></router-outlet>
 </mat-tab-nav-panel>

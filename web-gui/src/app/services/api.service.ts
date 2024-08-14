@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { Client, Order, Part } from '../interfaces';
+import { Client, Order, Part, PredictParts } from '../interfaces';
 
 interface ServerPartQuantity {
   id: number;
@@ -73,6 +73,20 @@ export class ApiService {
         )
       })
     );
+  }
+
+  createPopularParts(timeFrom: Date, timeTill: Date): Observable<any>{
+    const times = {
+      dateFrom: timeFrom.toISOString(),
+      dateTill: timeTill.toISOString()
+    }
+    const path = this.baseUrl + '/popularParts';
+    return this.http.post<PredictParts>(path, times);
+  }
+
+  getPopularParts(): Observable<PredictParts[]>{
+    const path = this.baseUrl + '/popularParts';
+    return this.http.get<PredictParts[]>(path);
   }
 
   createOrder(order: Order): Observable<any> {
