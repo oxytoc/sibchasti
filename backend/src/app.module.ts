@@ -7,6 +7,8 @@ import { OrderManagerModule } from './order-manager/order-manager.module';
 import { ClientManagerModule } from './client-manager/client-manager.module';
 import { PopularPartsModule } from './popular-parts/popular-parts.module';
 import { RouterModule } from '@nestjs/core';
+import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { RouterModule } from '@nestjs/core';
     TypeOrmModule.forRoot(ConnectionSource),
     ClientManagerModule,
     PopularPartsModule,
+    UserModule,
+    AuthModule,
     RouterModule.register([
       {
         path: 'api',
@@ -31,6 +35,12 @@ import { RouterModule } from '@nestjs/core';
           }, {
             path: 'parts',
             module: PartsManagerModule
+          }, {
+            path: 'auth',
+            module: AuthModule
+          }, {
+            path: 'user',
+            module: UserModule
           }
         ]
       }

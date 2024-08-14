@@ -1,11 +1,16 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Repository } from 'typeorm';
+import { spawn } from 'child_process';
 
-import * as ARIMA from 'arima';
 import { Order } from 'src/order-manager/entity/order.entity';
 import { CreatePopularPartDto } from './dto/create-popolar-part.dto';
 import { PopularPart } from './entity/popular-part.entity';
+
+export interface PartIdWithDate {
+  partId: number;
+  date: number;
+}
 
 @Injectable()
 export class PopularPartsService {
@@ -16,6 +21,30 @@ export class PopularPartsService {
 
   async getPopularParts() {
     return this.popularPartRepository.find({});
+  }
+
+  async getPartsOrderedByDate(createPopularPartDto: CreatePopularPartDto): Promise<PartIdWithDate[]> {
+    const dateFrom = createPopularPartDto.dateFrom;
+    const dateTill = createPopularPartDto.dateTill;
+    const orders = await this.orderRepository.find({
+      order: {
+        orderDate: "ASC",
+      },
+      where: {
+        orderDate: Between(new Date(dateFrom).toISOString(), new Date(dateTill).toISOString()),
+      }
+    });
+    if (!orders) {
+      throw new NotFoundException(`Orders between ${new Date(createPopularPartDto.dateFrom), new Date(createPopularPartDto.dateTill)} not found`);
+    }
+    let partIdsWithDate: PartIdWithDate[] = [];
+    orders.forEach(o => 
+      partIdsWithDate =[...partIdsWithDate, ...o.partQuantities.map(pq => ({
+        partId: pq.part.id,
+        date: Date.parse(o.orderDate)
+      }))]
+    );
+    return partIdsWithDate;
   }
 
   async createPopularParts(createPopularPartDto: CreatePopularPartDto) {
@@ -30,37 +59,35 @@ export class PopularPartsService {
       throw new NotFoundException(`Orders between ${new Date(createPopularPartDto.dateFrom), new Date(createPopularPartDto.dateTill)} not found`);
     }
 
-    const partIds: number[] = [];
-    orders.forEach(o => {
-      o.partQuantities.forEach(pq => {
-        partIds.push(pq.part.id);
+    return new Promise((resolve, reject) => {
+      const pythonProcess = spawn('python', ['/app/backend/utils/predict.py']);
+      
+      let output = '';
+      let error = '';
+
+      pythonProcess.stdout.on('data', (data) => {
+        output += data.toString();
       });
-    });
-    // Synthesize timeseries
-    const ts = partIds;
 
-    // Init arima and start training/ verbose is log of stats 
-    const autoarima = new ARIMA({ auto: true, verbose: false }).fit(ts);
-    const [pred, errs] = autoarima.predict(12);
-
-    const predicts: number[] = (pred as string[]).map(p => Math.floor(Number(p)));
-    const errors: number[] = (errs as string[]).map(p => Math.floor(Number(p)));
-
-    const popularParts = this.popularPartRepository.create({
-      timeSeries: ts,
-      predicts,
-      errors
-    });
-
-    try {
-      return this.popularPartRepository.save(popularParts);
-    } catch (error) {
-      throw new HttpException({
-        status: HttpStatus.FORBIDDEN,
-        error: 'This is a custom message',
-      }, HttpStatus.FORBIDDEN, {
-        cause: error
+      pythonProcess.stderr.on('data', (data) => {
+        error += data.toString();
       });
-    }
+
+      pythonProcess.on('close', (code) => {
+        if (code === 0) {
+          try {
+            const result = JSON.parse(output);
+            resolve(result);
+          } catch (err) {
+            reject(`Error parsing JSON: ${err.message}`);
+          }
+        } else {
+          reject(`Python process exited with code ${code}: ${error}`);
+        }
+      });
+
+      pythonProcess.stdin.write(JSON.stringify(orders));
+      pythonProcess.stdin.end();
+    });
   }
 }
