@@ -7,6 +7,7 @@ import { Order } from 'src/order-manager/entity/order.entity';
 import { PopularPart } from './entity/popular-part.entity';
 import { PartsOrderedByDateController } from './parts-ordered-by-date.controller';
 
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([Order, PopularPart])

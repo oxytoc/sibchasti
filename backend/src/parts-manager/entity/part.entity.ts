@@ -1,5 +1,6 @@
 import { PartQuantity } from "src/order-manager/entity/part-quantity.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { DatabaseFile } from "src/shared/database-file/database-file.entity";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity() //sql table === 'part'
 export class Part {
@@ -26,6 +27,18 @@ export class Part {
 
   @Column()
     price: number;
+
+  @JoinColumn({ name: 'partImageId' })
+  @OneToOne(
+    () => DatabaseFile,
+    {
+      nullable: true
+    }
+  )
+  partImage?: DatabaseFile;
+
+  @Column({ nullable: true })
+  partImageId?: number;
   
   @OneToMany(() => PartQuantity, (partQuantity: PartQuantity) => partQuantity.part)
     partQuantities: PartQuantity[];

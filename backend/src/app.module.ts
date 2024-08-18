@@ -9,6 +9,8 @@ import { PopularPartsModule } from './popular-parts/popular-parts.module';
 import { RouterModule } from '@nestjs/core';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { DatabaseFileModule } from './shared/database-file/database-file.module';
+
 
 @Module({
   imports: [
@@ -19,6 +21,7 @@ import { AuthModule } from './auth/auth.module';
     PopularPartsModule,
     UserModule,
     AuthModule,
+    DatabaseFileModule,
     RouterModule.register([
       {
         path: 'api',
@@ -41,6 +44,9 @@ import { AuthModule } from './auth/auth.module';
           }, {
             path: 'user',
             module: UserModule
+          }, {
+            path: 'databaseFile',
+            module: DatabaseFileModule
           }
         ]
       }

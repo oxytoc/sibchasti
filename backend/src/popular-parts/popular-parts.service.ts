@@ -59,35 +59,37 @@ export class PopularPartsService {
       throw new NotFoundException(`Orders between ${new Date(createPopularPartDto.dateFrom), new Date(createPopularPartDto.dateTill)} not found`);
     }
 
-    return new Promise((resolve, reject) => {
-      const pythonProcess = spawn('python', ['/app/backend/utils/predict.py']);
+    return null;
+
+    // return new Promise((resolve, reject) => {
+    //   const pythonProcess = spawn('python', ['/app/backend/utils/predict.py']);
       
-      let output = '';
-      let error = '';
+    //   let output = '';
+    //   let error = '';
 
-      pythonProcess.stdout.on('data', (data) => {
-        output += data.toString();
-      });
+    //   pythonProcess.stdout.on('data', (data) => {
+    //     output += data.toString();
+    //   });
 
-      pythonProcess.stderr.on('data', (data) => {
-        error += data.toString();
-      });
+    //   pythonProcess.stderr.on('data', (data) => {
+    //     error += data.toString();
+    //   });
 
-      pythonProcess.on('close', (code) => {
-        if (code === 0) {
-          try {
-            const result = JSON.parse(output);
-            resolve(result);
-          } catch (err) {
-            reject(`Error parsing JSON: ${err.message}`);
-          }
-        } else {
-          reject(`Python process exited with code ${code}: ${error}`);
-        }
-      });
+    //   pythonProcess.on('close', (code) => {
+    //     if (code === 0) {
+    //       try {
+    //         const result = JSON.parse(output);
+    //         resolve(result);
+    //       } catch (err) {
+    //         reject(`Error parsing JSON: ${err.message}`);
+    //       }
+    //     } else {
+    //       reject(`Python process exited with code ${code}: ${error}`);
+    //     }
+    //   });
 
-      pythonProcess.stdin.write(JSON.stringify(orders));
-      pythonProcess.stdin.end();
-    });
+    //   pythonProcess.stdin.write(JSON.stringify(orders));
+    //   pythonProcess.stdin.end();
+    // });
   }
 }

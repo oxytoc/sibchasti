@@ -1,6 +1,12 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, ParseFilePipeBuilder, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Express } from 'express';
+import { Observable } from 'rxjs';
+
 import { CreatePartDto } from './dto/create-part.dto';
 import { PartsManagerService } from './parts-manager.service';
+import { Part } from './entity/part.entity';
+
 
 @Controller('')
 export class PartsManagerController {
@@ -11,10 +17,23 @@ export class PartsManagerController {
     return this.partsManager.getAllParts();
   }
 
+  @UseInterceptors(FileInterceptor('partImage'))
   @Post()
-  create(@Body() createPartDto: CreatePartDto) {
-    this.partsManager.createPart(createPartDto);
-    return createPartDto;
+  create(
+    @Body() createPartDto: CreatePartDto,
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType: 'jpeg',
+        })
+        .addMaxSizeValidator({
+          maxSize: 100000
+        })
+        .build(),
+    )
+    file?: Express.Multer.File,
+  ): Observable<Part> {
+    return this.partsManager.createPart(createPartDto, file);
   }
 
   @Post('/delete')
