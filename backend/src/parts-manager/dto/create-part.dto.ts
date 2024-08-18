@@ -1,18 +1,32 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { IsNumber, IsString } from "class-validator";
 
 export class CreatePartDto {
+  @ApiProperty()
   @IsString()
     name: string;
+
+  @ApiProperty()
   @IsString()
     brand: string;
+
+  @ApiProperty()
   @IsNumber()
     quantity: number;
+
+  @ApiProperty()
   @IsNumber()
     partCode: number;
-  @IsString()
+
+  @ApiProperty()
+    @IsString()
     vin: string;
-  @IsString()
+
+  @ApiProperty()
+    @IsString()
     type: string;
-  @IsNumber()
+
+  @ApiProperty()
+    @IsNumber()
     price: number;
 }
