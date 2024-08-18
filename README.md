@@ -1,4 +1,4 @@
-  <p align="center">A simple app for autoservice</p>
+  <p align="center">A simple app for carservice</p>
 
 ## Installation
 
