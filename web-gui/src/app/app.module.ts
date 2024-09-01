@@ -2,11 +2,14 @@ import { NgModule } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 
 import { AppComponent } from './app.component';
 import { routes } from './app.routes';
+import { MainModule } from './main/main.module';
+import { AuthService } from './services/auth.service';
+import { TokenInterceptorService } from './services/token-interceptor.service';
 
 
 @NgModule({
@@ -20,7 +23,17 @@ import { routes } from './app.routes';
     MatTabsModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    MainModule,
+    HttpClientModule,
   ],
-  bootstrap: [AppComponent]
+  providers: [
+    AuthService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptorService,
+      multi: true,
+    },
+  ],
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

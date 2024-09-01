@@ -15,6 +15,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { PartsComponent } from './parts.component';
 import { CreatePartDialogComponent } from './create-part-dialog/create-part-dialog.component';
+import { MaterialModule } from '../share/material/material.module';
 
 const routes: Routes = [{ path: '', component: PartsComponent }];
 
@@ -26,16 +27,7 @@ const routes: Routes = [{ path: '', component: PartsComponent }];
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    MatTableModule,
-    MatPaginatorModule,
-    MatProgressSpinnerModule,
-    MatButtonModule,
-    MatTooltipModule,
-    MatSortModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatCheckboxModule,
-    MatDialogModule,
+    MaterialModule,
     ReactiveFormsModule,
     FormsModule,
   ]

@@ -35,3 +35,7 @@ export interface PredictParts {
   errors: number[];
 }
 
+export interface LoginInterface {
+  username: string;
+  password: string;
+}

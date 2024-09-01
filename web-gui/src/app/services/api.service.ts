@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { Client, Order, Part, PredictParts } from '../interfaces';
+
+import { Client, LoginInterface, Order, Part, PredictParts } from '../interfaces';
 
 interface ServerPartQuantity {
   id: number;
