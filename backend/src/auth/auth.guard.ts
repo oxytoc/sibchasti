@@ -10,11 +10,16 @@ import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from './public-stragegy';
 import { catchError, from, map, Observable, of, switchMap, tap } from 'rxjs';
+import { AuthGuard } from '@nestjs/passport';
+import { ConfigService } from '@nestjs/config';
 
 
 @Injectable()
-export class AuthGuard implements CanActivate {
-  constructor(private jwtService: JwtService, private reflector: Reflector) {} 
+export class AccessTokenGuard implements CanActivate {
+  constructor(
+    private jwtService: JwtService,
+    private reflector: Reflector,
+    private configService: ConfigService) {} 
   
   canActivate(context: ExecutionContext): Observable<boolean> {
     // return true for public requests
@@ -34,7 +39,7 @@ export class AuthGuard implements CanActivate {
     return from(this.jwtService.verifyAsync(
       token,
       {
-        secret: jwtConstants.secret
+        secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
       }
     )).pipe(
       map(payload => {
@@ -43,7 +48,10 @@ export class AuthGuard implements CanActivate {
         request['user'] = payload;
         return true;
       }),
-      catchError(() => {throw new UnauthorizedException();})
+      catchError((error) => {
+        console.log(error);
+        throw new UnauthorizedException(error);
+      })
     )
   } 
   

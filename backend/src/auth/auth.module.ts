@@ -1,14 +1,16 @@
 import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UserModule } from 'src/user/user.module';
-import { JwtModule } from '@nestjs/jwt';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
-import { jwtConstants } from './constants';
 import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from './auth.guard';
+import { AccessTokenGuard } from './auth.guard';
 import { RolesGuard } from 'src/roles/roles.guard';
+import { RefreshTokenStrategyService } from './strategy/refresh-token.strategy.service';
+import { AccessTokenStrategyService } from './strategy/access-token.strategy.service';
 
 
 @Module({
@@ -16,20 +18,20 @@ import { RolesGuard } from 'src/roles/roles.guard';
   providers: [
     {
       provide: APP_GUARD,
-      useClass: AuthGuard,
+      useClass: AccessTokenGuard,
     },
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
-    AuthService
+    AuthService,
+    AccessTokenStrategyService,
+    RefreshTokenStrategyService
   ],
   imports: [
     UserModule,
     JwtModule.register({
       global: true,
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: '1d' },
     }),
     TypeOrmModule.forFeature([User]),
   ],

@@ -1,9 +1,10 @@
-import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus, Get, UseGuards, Req } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AuthService } from './auth.service';
 import { Public } from './public-stragegy';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { User } from 'src/user/entities/user.entity';
+
 
 @Controller("")
 @ApiTags("auth")
@@ -34,5 +35,11 @@ export class AuthController {
   })
   signUp(@Body() signUpDto: CreateUserDto) {
     return this.authService.signUp(signUpDto);
+  }
+
+  @Public()
+  @Post('refresh')
+  refreshTokens(@Body() refreshDto: { refreshToken: string, username: string }) {
+    return this.authService.refreshTokens(refreshDto.refreshToken, refreshDto.username);
   }
 }
