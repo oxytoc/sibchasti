@@ -11,6 +11,9 @@ export class Part {
     brand: string;
 
   @Column()
+    carBrand: string;
+
+  @Column()
     name: string;
 
   @Column()

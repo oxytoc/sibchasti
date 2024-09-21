@@ -11,6 +11,10 @@ export class CreatePartDto {
     brand: string;
 
   @ApiProperty()
+  @IsString()
+    carBrand: string;
+
+  @ApiProperty()
   @IsNumber()
     quantity: number;
 
