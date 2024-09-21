@@ -1,6 +1,28 @@
+@use '@angular/material' as mat;
+@use "./typography/config" as config;
+
+$my-app-light-theme: mat.define-light-theme(
+  (
+    // rest remains same
+    typography: config.$my-app-typography // <-- added
+  )
+);
+
+@include mat.typography-hierarchy(config.$my-app-typography);
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #F5F5F5;
+}
+
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
 
 .spinner-container {
   mat-spinner {
