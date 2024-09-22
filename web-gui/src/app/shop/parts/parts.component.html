@@ -1,0 +1,5 @@
+<div class="parts-container">
+  <ng-container *ngFor="let part of (parts$ | async)">
+    <app-part [setPart]="part"></app-part>
+  </ng-container>
+</div>

@@ -3,8 +3,9 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject, Observable, Subscription, combineLatest } from 'rxjs';
 
-import { ApiService } from '../../services/api.service';
-import { Client, Part } from '../../interfaces';
+import { ApiService } from '../../../services/api.service';
+import { Client, Part } from '../../../interfaces';
+
 
 @Component({
   selector: 'app-create-order-dialog',
@@ -35,7 +36,7 @@ export class CreateOrderDialogComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.sub.add(combineLatest([this.service.getClients(), this.service.getParts()])
+    this.sub.add(combineLatest([this.service.getClients(), this.service.getParts({})])
       .subscribe(([clients, parts]) => {
         this.clients = clients; 
         this.parts = parts;

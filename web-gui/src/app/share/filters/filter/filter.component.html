@@ -1,0 +1,18 @@
+<div class="form-field" *ngIf="!!filter">
+  <mat-form-field *ngIf="filter.type === FilterType.STRING_FILTER">
+    <mat-label>{{filter.showName}}</mat-label>
+    <input matInput [formControl]="formFilter">
+  </mat-form-field>
+
+  <mat-form-field *ngIf="filter.type === FilterType.NUMBER_FILTER">
+    <mat-label>{{filter.showName}}</mat-label>
+    <input matInput type="number" [formControl]="formFilter">
+  </mat-form-field>
+
+  <mat-form-field  *ngIf="filter.type === FilterType.ENUM_FILTER">
+    <mat-label>{{filter.showName}}</mat-label>
+    <mat-select [formControl]="formFilter">
+      <mat-option *ngFor="let enum of filter.enum" [value]="enum">{{ enum }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>

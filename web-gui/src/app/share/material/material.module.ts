@@ -11,6 +11,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {MatCardModule} from '@angular/material/card'; 
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 
 
 @NgModule({
@@ -28,6 +30,7 @@ import {MatCardModule} from '@angular/material/card';
     MatCheckboxModule,
     MatDialogModule,
     MatCardModule,
+    MatSelectModule
   ],
   exports: [
     CommonModule,
@@ -42,6 +45,8 @@ import {MatCardModule} from '@angular/material/card';
     MatCheckboxModule,
     MatDialogModule,
     MatCardModule,
+    MatIconModule,
+    MatSelectModule
   ]
 })
 export class MaterialModule { }

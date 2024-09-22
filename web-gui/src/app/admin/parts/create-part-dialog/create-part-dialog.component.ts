@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Part } from '../../interfaces';
-import { ApiService } from '../../services/api.service';
+
+import { ApiService } from '../../../services/api.service';
 
 @Component({
   selector: 'app-create-part-dialog',
@@ -12,6 +12,7 @@ import { ApiService } from '../../services/api.service';
 export class CreatePartDialogComponent {
   form: FormGroup = this.formBuilder.group({
     brand: new FormControl('', [Validators.required]),
+    carBrand: new FormControl('', [Validators.required]),
     name: new FormControl('', [Validators.required]),
     price: new FormControl(null, [Validators.required, Validators.min(0)]),
     quantity: new FormControl(null, [Validators.required, Validators.min(1)]),

@@ -1,36 +1,38 @@
-import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { Component, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { Client } from '../interfaces';
+import { MatSort } from '@angular/material/sort';
 import { BehaviorSubject, Observable, Subscription, filter, switchMap, tap } from 'rxjs';
-import { SelectionModel } from '@angular/cdk/collections';
-import { ApiService } from '../services/api.service';
 import { MatDialog } from '@angular/material/dialog';
-import { CreateClientDialogComponent } from './create-client-dialog/create-client-dialog.component';
+import { SelectionModel } from '@angular/cdk/collections';
+import { MatPaginator } from '@angular/material/paginator';
+
+import { Order } from '../../interfaces';
+import { CreateOrderDialogComponent } from './create-order-dialog/create-order-dialog.component';
+import { ApiService } from '../../services/api.service';
+
 
 @Component({
-  selector: 'app-clients',
-  templateUrl: './clients.component.html',
-  styleUrl: './clients.component.scss'
+  selector: 'app-orders',
+  templateUrl: './orders.component.html',
+  styleUrl: './orders.component.scss'
 })
-export class ClientsComponent implements AfterViewInit, OnDestroy {
+export class OrdersComponent {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  dataSource: MatTableDataSource<Client> = new MatTableDataSource();
+  dataSource: MatTableDataSource<Order> = new MatTableDataSource();
 
   private _isLoading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   isLoading$: Observable<boolean> = this._isLoading.asObservable();
   private _update: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  updateDataSource$: Observable<Client[]> = this._update.asObservable()
+  updateDataSource$: Observable<Order[]> = this._update.asObservable()
     .pipe(
       tap(() => this._isLoading.next(true)),
-      switchMap(() => this.service.getClients()),
+      switchMap(() => this.service.getOrders()),
     )
 
-  displayedColumns: string[] = ['select', 'id', 'secondName','firstName', 'thirdName', 'phoneNumber'];
-  selection = new SelectionModel<Client>(true, []);
+  displayedColumns: string[] = ['select', 'id', 'orderDate', 'clientId', 'partQuantities'];
+  selection = new SelectionModel<Order>(true, []);
   
   sub: Subscription = new Subscription();
 
@@ -42,9 +44,9 @@ export class ClientsComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.sub.add(
       this.updateDataSource$
-      .subscribe(clients => {
+      .subscribe(orders => {
         this._isLoading.next(false)
-        this.dataSource = new MatTableDataSource(clients);
+        this.dataSource = new MatTableDataSource(orders);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       })
@@ -75,8 +77,8 @@ export class ClientsComponent implements AfterViewInit, OnDestroy {
     this.selection.select(...this.dataSource.data);
   }
 
-  deleteClients(): void {
-    this.sub.add(this.service.deleteClients(this.selection.selected).subscribe(
+  deleteOrders(): void {
+    this.sub.add(this.service.deleteOrders(this.selection.selected).subscribe(
       () => {
         this.selection.clear();
         this._update.next(true);
@@ -84,9 +86,9 @@ export class ClientsComponent implements AfterViewInit, OnDestroy {
     ));
   }
 
-  createClient(): void {
-    this.dialog.open(CreateClientDialogComponent, {
-      maxWidth: '260px'
+  createOrder(): void {
+    this.dialog.open(CreateOrderDialogComponent, {
+      maxWidth: '40vw'
     }).afterClosed()
     .pipe(filter(value => !!value))
     .subscribe(() => {

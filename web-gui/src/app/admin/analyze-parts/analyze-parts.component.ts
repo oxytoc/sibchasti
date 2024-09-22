@@ -1,11 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import { ApiService } from '../services/api.service';
-import { BehaviorSubject, Observable, Subscription, switchMap, tap } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { PredictParts } from '../interfaces';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { BehaviorSubject, Observable, Subscription, switchMap, tap } from 'rxjs';
+
+import { ApiService } from '../../services/api.service';
+import { PredictParts } from '../../interfaces';
 
 @Component({
   selector: 'app-analyze-parts',

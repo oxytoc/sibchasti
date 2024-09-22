@@ -28,9 +28,10 @@ export class ApiService {
 
   baseUrl = 'http://localhost:3000/api';
 
-  getParts(): Observable<Part[]> {
+  getParts(params?: Record<string, any>): Observable<Part[]> {
     const path = this.baseUrl + '/parts';
-    return this.http.get<any>(path);
+    console.log(params);
+    return this.http.get<any>(path , { params });
   }
 
   createPart(part: Part): Observable<any> {

@@ -7,6 +7,9 @@ export interface Part {
   vin: string;
   type: string;
   price: number;
+  partImage?: DatabaseFile;
+  partImageId?: string;
+  carBrand: string;
 }
 
 export interface Client {
@@ -38,4 +41,30 @@ export interface PredictParts {
 export interface LoginInterface {
   username: string;
   password: string;
+}
+
+export interface DatabaseFile {
+  id: number;
+  filename: string;
+  data: Uint8Array;
+}
+
+export enum FilterType {
+  STRING_FILTER = 'STRING_FILTER',
+  NUMBER_FILTER = 'NUMBER_FILTER',
+  DATE_FILTER = 'DATE_FILTER',
+  BOOLEAN_FILTER = 'BOOLEAN_FILTER',
+  ENUM_FILTER = 'ENUM_FILTER',
+}
+
+export interface FilterInterface {
+  name: string;
+  showName: string;
+  type: FilterType;
+  enum?: string[];
+}
+
+export interface FilterChanged {
+  name: string;
+  value: any;
 }

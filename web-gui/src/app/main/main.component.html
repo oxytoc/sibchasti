@@ -1,30 +1,31 @@
-<nav mat-tab-nav-bar [tabPanel]="tabPanel">
-  <a  mat-tab-link
-      routerLink="/parts"
-      routerLinkActive #rlaParts="routerLinkActive"
-      [active]="rlaParts.isActive">
-    Запчасти
-  </a>
-  <a  mat-tab-link
-      routerLink="/clients"
-      routerLinkActive #rlaClients="routerLinkActive"
-      [active]="rlaClients.isActive">
-    Клиенты
-  </a>
-  <a  mat-tab-link
-      routerLink="/orders"
-      routerLinkActive #rlaOrders="routerLinkActive"
-      [active]="rlaOrders.isActive">
-    Заказы
-  </a>
-  <a  mat-tab-link
-    routerLink="/popular-parts"
-    routerLinkActive #rlaPopParts="routerLinkActive"
-    [active]="rlaPopParts.isActive">
-  Популярные запчасти
-</a>
-</nav>
+<header class="main">
+  <div class="logo">
+    <mat-icon class="icon">directions_car</mat-icon>
+    <h1 class="logo-text">СибЧасти</h1>
+  </div>
 
-<mat-tab-nav-panel #tabPanel>
+  <div class="header-search">
+    <mat-form-field class="search">
+      <mat-label>Поиск по товарам</mat-label>
+      <input matInput>
+    </mat-form-field>
+  </div>
+
+  <div class="header-action">
+    <h2 class="action-text">Daniil</h2>
+  </div>
+</header>
+
+<div class="main-block">
   <router-outlet></router-outlet>
-</mat-tab-nav-panel>
+</div>
+
+<footer class="main">
+  <p>2024 SibChasti. Все права защищены.</p>
+  <a href="#">Политика конфиденциальности</a>
+  <a href="#">Связаться с нами</a>
+  <div class="logo">
+    <mat-icon class="icon">directions_car</mat-icon>
+    <h1 class="logo-text">СибЧасти</h1>
+  </div>
+</footer>

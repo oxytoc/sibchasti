@@ -1,38 +1,37 @@
 import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-
-import { Part } from '../interfaces';
-import { ApiService } from '../services/api.service';
-import { BehaviorSubject, Observable, Subscription, filter, switchMap, tap } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { SelectionModel } from '@angular/cdk/collections';
+import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { CreatePartDialogComponent } from './create-part-dialog/create-part-dialog.component';
+import { SelectionModel } from '@angular/cdk/collections';
+import { BehaviorSubject, Observable, Subscription, filter, switchMap, tap } from 'rxjs';
 
+import { Client } from '../../interfaces';
+import { ApiService } from '../../services/api.service';
+import { CreateClientDialogComponent } from './create-client-dialog/create-client-dialog.component';
 
 @Component({
-  selector: 'app-parts',
-  templateUrl: './parts.component.html',
-  styleUrl: './parts.component.scss'
+  selector: 'app-clients',
+  templateUrl: './clients.component.html',
+  styleUrl: './clients.component.scss'
 })
-export class PartsComponent implements AfterViewInit, OnDestroy {
+export class ClientsComponent implements AfterViewInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  dataSource: MatTableDataSource<Part> = new MatTableDataSource();
+  dataSource: MatTableDataSource<Client> = new MatTableDataSource();
 
   private _isLoading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   isLoading$: Observable<boolean> = this._isLoading.asObservable();
   private _update: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  updateDataSource$: Observable<Part[]> = this._update.asObservable()
+  updateDataSource$: Observable<Client[]> = this._update.asObservable()
     .pipe(
       tap(() => this._isLoading.next(true)),
-      switchMap(() => this.service.getParts()),
+      switchMap(() => this.service.getClients()),
     )
 
-  displayedColumns: string[] = ['select', 'id', 'brand', 'name', 'quantity', 'partCode', 'vin', 'type', 'price'];
-  selection = new SelectionModel<Part>(true, []);
+  displayedColumns: string[] = ['select', 'id', 'secondName','firstName', 'thirdName', 'phoneNumber'];
+  selection = new SelectionModel<Client>(true, []);
   
   sub: Subscription = new Subscription();
 
@@ -44,9 +43,9 @@ export class PartsComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.sub.add(
       this.updateDataSource$
-      .subscribe(parts => {
+      .subscribe(clients => {
         this._isLoading.next(false)
-        this.dataSource = new MatTableDataSource(parts);
+        this.dataSource = new MatTableDataSource(clients);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       })
@@ -77,8 +76,8 @@ export class PartsComponent implements AfterViewInit, OnDestroy {
     this.selection.select(...this.dataSource.data);
   }
 
-  deleteParts(): void {
-    this.sub.add(this.service.deleteParts(this.selection.selected).subscribe(
+  deleteClients(): void {
+    this.sub.add(this.service.deleteClients(this.selection.selected).subscribe(
       () => {
         this.selection.clear();
         this._update.next(true);
@@ -86,9 +85,9 @@ export class PartsComponent implements AfterViewInit, OnDestroy {
     ));
   }
 
-  createPart(): void {
-    this.dialog.open(CreatePartDialogComponent, {
-      maxWidth: '40vw'
+  createClient(): void {
+    this.dialog.open(CreateClientDialogComponent, {
+      maxWidth: '260px'
     }).afterClosed()
     .pipe(filter(value => !!value))
     .subscribe(() => {
@@ -99,5 +98,4 @@ export class PartsComponent implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.sub.unsubscribe();
   }
-
 }

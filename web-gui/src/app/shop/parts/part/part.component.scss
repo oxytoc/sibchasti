@@ -1,0 +1,23 @@
+.description {
+  margin: 0;
+  font-weight: 600;
+}
+
+.part-card {
+  width: 250px;
+  height: 350px;
+  border: 2px solid #F5F5F5;
+  border-radius: 5px;
+  box-sizing: content-box;
+}
+
+.price {
+  width: max-content;
+  margin-left: auto;
+}
+
+.part-image {
+  width: 250px;
+  height: 250px;
+  border-radius: 5px;
+}

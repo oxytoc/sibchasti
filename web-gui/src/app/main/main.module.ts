@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 
 import { MainComponent } from './main.component';
 import { HttpClientModule } from '@angular/common/http';
+import { MaterialModule } from '../share/material/material.module';
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
     RouterModule,
     MatTabsModule,
     HttpClientModule,
+    MaterialModule
   ],
   exports: [MainComponent]
 })

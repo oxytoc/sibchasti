@@ -1,0 +1,14 @@
+<div class="filters-container">
+  <ng-container *ngFor="let filter of filters">
+    <app-filter
+        [filter]="filter"
+        (filterChanged)="setFilter($event)"
+        [resetFilter]="filtersResetValues$ | async">
+    </app-filter>
+  </ng-container>
+
+  <div class="actions">
+    <button mat-flat-button color="primary" (click)="applyFilters()">Применить фильтры</button>
+    <button mat-raised-button (click)="clearFilters()">Очистить фильтры</button>
+  </div>
+</div>
