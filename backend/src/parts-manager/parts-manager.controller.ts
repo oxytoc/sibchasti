@@ -1,22 +1,26 @@
-import { Body, Controller, Get, ParseFilePipeBuilder, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, ParseFilePipeBuilder, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Express } from 'express';
+import { Express, query } from 'express';
 import { Observable } from 'rxjs';
 
 import { CreatePartDto } from './dto/create-part.dto';
 import { PartsManagerService } from './parts-manager.service';
 import { Part } from './entity/part.entity';
+import { FindPartsDto } from './dto/find-part.dto';
+import { Public } from 'src/auth/public-stragegy';
 
 
 @Controller('')
 export class PartsManagerController {
   constructor(private partsManager: PartsManagerService) { }
 
+  @Public()
   @Get()
-  getAllParts() {
-    return this.partsManager.getAllParts();
+  getAllParts(@Query() query: FindPartsDto) {
+    return this.partsManager.findMany(query);
   }
 
+  @Public()
   @UseInterceptors(FileInterceptor('partImage'))
   @Post()
   create(

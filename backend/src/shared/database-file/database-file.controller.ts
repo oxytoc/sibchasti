@@ -4,6 +4,7 @@ import { Response } from 'express';
 import { from, map, Observable } from 'rxjs';
 
 import { DatabaseFilesService } from './database-file.service';
+import { Public } from 'src/auth/public-stragegy';
 
 
 @Controller()
@@ -13,6 +14,7 @@ export class DatabaseFileController {
     private readonly databaseFilesService: DatabaseFilesService
   ) {}
  
+  @Public()
   @Get(':id')
   getDatabaseFileById(
     @Param('id', ParseIntPipe) id: number,

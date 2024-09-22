@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { In, Repository } from 'typeorm';
+import { Brackets, FindOptionsWhere, In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { catchError, from, map, Observable, switchMap } from 'rxjs';
 
@@ -7,6 +7,7 @@ import { Part } from './entity/part.entity';
 import { CreatePartDto } from './dto/create-part.dto';
 import { UpdatePartDto } from './dto/update-part.dto';
 import { DatabaseFilesService } from 'src/shared/database-file/database-file.service';
+import { FindPartsDto } from './dto/find-part.dto';
 
 
 @Injectable()
@@ -79,6 +80,53 @@ export class PartsManagerService {
       })
     );
   }
+
+  findMany(dto: FindPartsDto): Observable<Part[]> {
+    const { name, brand, carBrand, quantity, partCode, vin, type, price, search } = dto;
+    const conditions: FindOptionsWhere<Part> | FindOptionsWhere<Part>[] = {
+      ...(name ? { name } : {}),
+      ...(brand? { brand } : {}),
+      ...(carBrand? { carBrand } : {}),
+      ...(quantity? { quantity } : {}),
+      ...(partCode? { partCode } : {}),
+      ...(vin? { vin } : {}),
+      ...(type? { type } : {}),
+      ...(price? { price } : {}),
+    };
+
+    const queryBuilder = this.partRepository.createQueryBuilder('part');
+    name && queryBuilder.andWhere('part.name = :name', { name });
+    brand && queryBuilder.andWhere('part.brand = :brand', { brand });
+    carBrand && queryBuilder.andWhere('part.carBrand = :carBrand', { carBrand });
+    quantity && queryBuilder.andWhere('part.quantity = :quantity', { quantity });
+    partCode && queryBuilder.andWhere('part.partCode = :partCode', { partCode });
+    vin && queryBuilder.andWhere('part.vin = :vin', { vin });
+    type && queryBuilder.andWhere('part.type = :type', { type });
+    price && queryBuilder.andWhere('part.price = :price', { price });
+
+    if (search) {
+      queryBuilder.andWhere(new Brackets(qb => {
+        qb.where('LOWER(part.name) LIKE LOWE(:search)', { search: `%${search}%` });
+        qb.orWhere('LOWER(part.brand) LIKE LOWE(:search)', { search: `%${search}%` });
+        qb.orWhere('LOWER(part.carBrand) LIKE LOWE(:search)', { search: `%${search}%` });
+        qb.orWhere('LOWER(part.vin) LIKE LOWE(:search)', { search: `%${search}%` });
+        qb.orWhere('LOWER(part.type) LIKE LOWE(:search)', { search: `%${search}%` });
+        qb.orWhere('LOWER(part.price) LIKE LOWE(:search)', { search: `%${search}%` });
+      }))
+    }
+
+    return from(queryBuilder.getMany()).pipe(
+      catchError(error => { throw new NotFoundException(`Parts not found`); }),
+      map(parts => {
+        if (!parts.length) {
+          throw new NotFoundException(`Parts not found`);
+        }
+    
+        return parts;
+      })
+    );
+  }
+
 
   getAllParts(): Observable<Part[]> {
     return from(this.partRepository.find({}));
