@@ -1,6 +1,12 @@
 <div class="part-card" *ngIf="(loading$ | async) === false">
-  <img class="part-image" [src]="imageUrl">
-  <p class="mat-h3 description price">{{ part.price }} Р</p>
-  <p class="mat-h3 description">{{ part.name }}</p>
-  <p class="mat-h3 description">{{ part.carBrand }}</p>
+  <div (click)="openDetailPartDialog(part)">
+    <img class="part-image" [src]="imageUrl">
+    <p class="mat-h3 description price">{{ part.price }} Р</p>
+    <p class="mat-h3 description">{{ part.name }}</p>
+    <p class="mat-h3 description">{{ part.brand + ' ' + part.carModel }}</p>
+  </div>
+  <button mat-button (click)="addPartToCart()">
+    <span>Добавить</span>
+    <mat-icon>add</mat-icon>
+  </button>
 </div>

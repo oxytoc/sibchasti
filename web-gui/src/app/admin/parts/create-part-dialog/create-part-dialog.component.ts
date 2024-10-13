@@ -12,11 +12,12 @@ import { ApiService } from '../../../services/api.service';
 export class CreatePartDialogComponent {
   form: FormGroup = this.formBuilder.group({
     brand: new FormControl('', [Validators.required]),
-    carBrand: new FormControl('', [Validators.required]),
+    carModel: new FormControl('', [Validators.required]),
+    description: new FormControl('', [Validators.required]),
     name: new FormControl('', [Validators.required]),
     price: new FormControl(null, [Validators.required, Validators.min(0)]),
     quantity: new FormControl(null, [Validators.required, Validators.min(1)]),
-    partCode: new FormControl(null, [Validators.required, Validators.min(0)]),
+    article: new FormControl(null, [Validators.required, Validators.min(0)]),
     vin: new FormControl('', [Validators.required]),
     type: new FormControl('', [Validators.required]),
   })

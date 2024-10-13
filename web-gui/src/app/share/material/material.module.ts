@@ -30,11 +30,10 @@ import { MatSelectModule } from '@angular/material/select';
     MatCheckboxModule,
     MatDialogModule,
     MatCardModule,
-    MatSelectModule
+    MatSelectModule,
   ],
   exports: [
     CommonModule,
-    MatTableModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
     MatButtonModule,
@@ -46,7 +45,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatDialogModule,
     MatCardModule,
     MatIconModule,
-    MatSelectModule
+    MatSelectModule,
+    MatTableModule
   ]
 })
 export class MaterialModule { }

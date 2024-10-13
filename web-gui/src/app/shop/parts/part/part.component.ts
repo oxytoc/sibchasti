@@ -5,6 +5,9 @@ import { Buffer } from 'buffer';
 import { Part } from '../../../interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { ApiService } from '../../../services/api.service';
+import { AddedPartsToCartEventService } from '../../added-parts-to-cart-event.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DetailPartDialogComponent } from '../detail-part-dialog/detail-part-dialog.component';
 
 
 @Component({
@@ -33,5 +36,19 @@ export class PartComponent {
   constructor(
     // private sanitizer: DomSanitizer,
     private service: ApiService,
+    private cartService: AddedPartsToCartEventService,
+    private dialog: MatDialog
   ) { }
+
+  addPartToCart(): void {
+    this.cartService.addPartToCart(this.part);
+  }
+
+  openDetailPartDialog(part: Part): void {
+    this.dialog.open(DetailPartDialogComponent, {
+      maxWidth: '50vw',
+      data: part
+    }).afterClosed()
+    .subscribe();
+  }
 }

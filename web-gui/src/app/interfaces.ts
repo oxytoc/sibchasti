@@ -3,13 +3,19 @@ export interface Part {
   brand: string;
   name: string;
   quantity: number;
-  partCode: number;
+  article: number;
   vin: string;
   type: string;
   price: number;
   partImage?: DatabaseFile;
   partImageId?: string;
-  carBrand: string;
+  carModel: string;
+  description: string;
+}
+
+export interface ObjectInformation {
+  parameter: string;
+  value: string;
 }
 
 export interface Client {
