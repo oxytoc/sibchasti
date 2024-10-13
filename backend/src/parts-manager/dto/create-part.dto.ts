@@ -12,7 +12,11 @@ export class CreatePartDto {
 
   @ApiProperty()
   @IsString()
-    carBrand: string;
+    carModel: string;
+
+  @ApiProperty()
+  @IsString()
+    description: string;
 
   @ApiProperty()
   @IsNumber()
@@ -20,7 +24,7 @@ export class CreatePartDto {
 
   @ApiProperty()
   @IsNumber()
-    partCode: number;
+    article: number;
 
   @ApiProperty()
     @IsString()

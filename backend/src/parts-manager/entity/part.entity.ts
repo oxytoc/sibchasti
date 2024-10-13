@@ -11,7 +11,10 @@ export class Part {
     brand: string;
 
   @Column()
-    carBrand: string;
+    carModel: string;
+  
+  @Column()
+    description: string;
 
   @Column()
     name: string;
@@ -20,7 +23,7 @@ export class Part {
     quantity: number;
 
   @Column()
-    partCode: number;
+    article: number;
 
   @Column()
     vin: string;
