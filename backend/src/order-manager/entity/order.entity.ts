@@ -1,7 +1,7 @@
 import { CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-import { Client } from "src/client-manager/entity/client.entity";
 import { PartQuantity } from "./part-quantity.entity";
+import { User } from "src/user/entities/user.entity";
 
 @Entity()
 export class Order {
@@ -11,8 +11,8 @@ export class Order {
   @CreateDateColumn()
     orderDate: string;
 
-  @ManyToOne(() => Client, (client: Client) => client.orders, { eager: true })
-    client: Client;
+  @ManyToOne(() => User, (client: User) => client.orders, { eager: true })
+    client: User;
 
   @JoinTable()
   @ManyToMany(() => PartQuantity, (partQuantity: PartQuantity) => partQuantity.orders, { cascade: true, eager: true })

@@ -6,7 +6,6 @@ import { RouterModule } from '@nestjs/core';
 
 import { ConnectionSource } from './dataSource';
 import { OrderManagerModule } from './order-manager/order-manager.module';
-import { ClientManagerModule } from './client-manager/client-manager.module';
 import { PopularPartsModule } from './popular-parts/popular-parts.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
@@ -18,7 +17,6 @@ import { DatabaseFileModule } from './shared/database-file/database-file.module'
     PartsManagerModule,
     OrderManagerModule,
     TypeOrmModule.forRoot(ConnectionSource),
-    ClientManagerModule,
     PopularPartsModule,
     UserModule,
     AuthModule,
@@ -33,9 +31,6 @@ import { DatabaseFileModule } from './shared/database-file/database-file.module'
           {
             path: 'orders',
             module: OrderManagerModule
-          }, {
-            path: 'clients',
-            module: ClientManagerModule
           }, {
             path: 'popularParts',
             module: PopularPartsModule

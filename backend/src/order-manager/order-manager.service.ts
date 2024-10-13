@@ -3,16 +3,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 
 import { Order } from './entity/order.entity';
-import { Client } from 'src/client-manager/entity/client.entity';
 import { Part } from 'src/parts-manager/entity/part.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { PartQuantity } from './entity/part-quantity.entity';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class OrderManagerService {
   constructor(
     @InjectRepository(Order) private readonly orderRepository: Repository<Order>,
-    @InjectRepository(Client) private readonly clientRepository: Repository<Client>,
+    @InjectRepository(User) private readonly clientRepository: Repository<User>,
     @InjectRepository(Part) private readonly partRepository: Repository<Part>,
     @InjectRepository(PartQuantity) private readonly partQuantityRepository: Repository<PartQuantity>,
 
@@ -26,7 +26,7 @@ export class OrderManagerService {
     return part;
   }
 
-  private async loadClientById(clientId: number): Promise<Client> {
+  private async loadClientById(clientId: number): Promise<User> {
     const client = await this.clientRepository.findOne({where: {id: clientId}});
     if (!client) {
       throw new NotFoundException(`Client ${clientId} not found`);

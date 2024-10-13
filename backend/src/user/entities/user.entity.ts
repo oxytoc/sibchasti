@@ -1,17 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 import { Role } from "src/roles/role.enum";
+import { Order } from "src/order-manager/entity/order.entity";
 
 @Entity()
 export class User {
-    /**
-   * this decorator will help to auto generate id for the table.
-   */
     @PrimaryGeneratedColumn()
     id: number;
-  
-    @Column({ type: 'varchar', length: 30 })
-    name: string;
   
     @Column({ type: 'varchar', length: 15 })
     username: string;
@@ -24,6 +19,18 @@ export class User {
   
     @Column({ type: 'varchar' })
     password: string;
+
+    @Column({ type: 'varchar', length: 30 })
+    firstName: string;
+
+    @Column({ type: 'varchar', length: 30 })
+    secondName: string;
+
+    @Column({ type: 'varchar', length: 30 })
+    thirdName: string;
+
+    @Column({ type: 'varchar', length: 11 })
+    phoneNumber: string;
   
     @Column({ type: 'enum', enum: ['m', 'f', 'u'] })
     /**
@@ -35,4 +42,7 @@ export class User {
 
     @Column({ type: 'enum', enum: Object.values(Role) })
     role: Role;
+
+    @OneToMany(() => Order, (order: Order) => order.client)
+    orders: Order[];
 }

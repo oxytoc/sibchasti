@@ -14,7 +14,10 @@ export class UserService {
 
   createUser(createUserDto: CreateUserDto): Observable<User> {
     const user: User = new User();
-    user.name = createUserDto.name;
+    user.firstName = createUserDto.firstName;
+    user.secondName = createUserDto.secondName;
+    user.thirdName = createUserDto.thirdName;
+    user.phoneNumber = createUserDto.phoneNumber;
     user.age = createUserDto.age;
     user.email = createUserDto.email;
     user.username = createUserDto.username;
