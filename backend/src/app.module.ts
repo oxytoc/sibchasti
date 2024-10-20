@@ -41,7 +41,7 @@ import { DatabaseFileModule } from './shared/database-file/database-file.module'
             path: 'auth',
             module: AuthModule
           }, {
-            path: 'user',
+            path: 'users',
             module: UserModule
           }, {
             path: 'databaseFile',
