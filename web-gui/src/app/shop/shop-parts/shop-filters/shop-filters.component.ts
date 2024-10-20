@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { FilterChanged, FilterInterface, FilterType } from '../../interfaces';
+import { FilterChanged, FilterInterface, FilterType } from '../../../interfaces';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -10,8 +10,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class ShopFiltersComponent {
   readonly filters: FilterInterface[] = [
-    { name: 'brand', showName: 'Бренд', type: FilterType.STRING_FILTER },
-    { name: 'carBrand', showName: 'Бренд авто', type: FilterType.STRING_FILTER },
+    { name: 'brand', showName: 'Марка', type: FilterType.STRING_FILTER },
+    { name: 'carBrand', showName: 'Модель', type: FilterType.STRING_FILTER },
     { name: 'name', showName: 'Название', type: FilterType.STRING_FILTER },
     { name: 'quantity', showName: 'Колличество', type: FilterType.NUMBER_FILTER },
     { name: 'partCode', showName: 'Парткод', type: FilterType.NUMBER_FILTER },

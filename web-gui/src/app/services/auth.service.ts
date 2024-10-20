@@ -29,7 +29,7 @@ export class AuthService {
         localStorage.setItem(this.authRefreshSecretKey, authToken.refreshToken);
         this.isAuthenticated = true;
         this.username = loginObject.username;
-        return this.router.navigate(['/']);
+        return this.router.navigate(['/admin']);
       }),
       catchError(error => {
         console.log(error);

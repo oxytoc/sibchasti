@@ -1,0 +1,47 @@
+:host ::ng-deep {
+  .cards-search {
+    .mat-mdc-text-field-wrapper {
+      background-color: #ECE6F0 !important;
+      border-bottom: none !important;
+      border-radius: 28px;
+    }
+
+    .mdc-line-ripple {
+      display: none
+    }
+
+    .mat-mdc-form-field-bottom-align {
+      display: none
+   }
+  }
+}
+
+.shop-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 10px 0;
+  background: #fff;
+  min-height: 98%;
+
+  .search {
+    width: 40vw;
+    max-height: 10vh;
+
+    input {
+      color: #49454F;
+    }
+  }
+
+  .filter-container {
+    width: 20%;
+    min-height: 100%;
+    border-right: 10px solid #F5F5F5;
+  }
+
+  .cards-container {
+    width: 80%;
+    height: 100%;
+    padding: 10px;
+  }
+}

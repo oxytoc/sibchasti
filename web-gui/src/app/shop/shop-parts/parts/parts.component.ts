@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, Observable, Subscription, switchMap } from 'rxjs';
 
-import { ApiService } from '../../services/api.service';
-import { Part } from '../../interfaces';
+import { ApiService } from '../../../services/api.service';
+import { Part } from '../../../interfaces';
 
 @Component({
   selector: 'app-parts',

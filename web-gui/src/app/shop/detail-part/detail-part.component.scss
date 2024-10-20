@@ -1,0 +1,33 @@
+.part-container {
+  background: #fff;
+  display: inline-block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px 20px;
+
+  .part-image {
+    width: 35vw;
+    height: 35vw;
+    border-radius: 5px;
+  }
+
+  .table-container {
+    width: 35vw;
+  }
+
+  .cart-cotainer {
+    width: 300px;
+    height: 150px;
+    padding: 10px;
+
+    button {
+      min-width: 100%;
+    }
+  }
+}
+
+.detail-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

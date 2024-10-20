@@ -1,5 +1,5 @@
 <div class="part-card" *ngIf="(loading$ | async) === false">
-  <div (click)="openDetailPartDialog(part)">
+  <div (click)="redirectToDetailPart(part)">
     <img class="part-image" [src]="imageUrl">
     <p class="mat-h3 description price">{{ part.price }} Р</p>
     <p class="mat-h3 description">{{ part.name }}</p>

@@ -1,37 +1,39 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { ShopComponent } from './shop.component';
 import { RouterModule, Routes } from '@angular/router';
-import { PartsComponent } from './parts/parts.component';
-import { PartComponent } from './parts/part/part.component';
+import { AddedPartsToCartEventService } from './added-parts-to-cart-event.service';
+import { HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from '../share/material/material.module';
-import { FiltersModule } from '../share/filters/filters.module';
-import { ShopFiltersComponent } from './shop-filters/shop-filters.component';
+
+
+const SHOP_ROUTES: Routes = [
+  { path: '', loadChildren: () => import('./shop-parts/shop-parts.module').then(m => m.ShopPartsModule) },
+  { path: 'part/:id', loadChildren: () => import('./detail-part/detail-part.module').then(m => m.DetailPartModule) },
+]
 
 export const routes: Routes = [
   {
     path: '',
     component: ShopComponent,
-    // children: SHOP_ROUTES,
-    runGuardsAndResolvers: 'always',
+    children: SHOP_ROUTES,
   },
 ];
 
 @NgModule({
   declarations: [
     ShopComponent,
-    PartsComponent,
-    PartComponent,
-    ShopFiltersComponent
   ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    MaterialModule,
-    FiltersModule
+    RouterModule,
+    HttpClientModule,
+    MaterialModule
   ],
-  exports: [
-    ShopComponent
+  providers: [
+    AddedPartsToCartEventService
   ]
 })
 export class ShopModule { }
