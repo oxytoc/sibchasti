@@ -21,6 +21,7 @@ export class PartsManagerService {
     const parImage = this.databaseFilesService.uploadDatabaseFile(file.buffer, file.fieldname);
     return from(parImage).pipe(
       switchMap(file => {
+        // TODO: Проверка уникальности артикула
         const part = this.partRepository.create({...partDto, partImageId: file.id});
         return from(this.partRepository.save(part))
           .pipe(
@@ -82,13 +83,13 @@ export class PartsManagerService {
   }
 
   findMany(dto: FindPartsDto): Observable<Part[]> {
-    const { name, brand, carBrand, quantity, partCode, vin, type, price, search } = dto;
+    const { name, brand, carModel, quantity, article, vin, type, price, search } = dto;
     const conditions: FindOptionsWhere<Part> | FindOptionsWhere<Part>[] = {
       ...(name ? { name } : {}),
       ...(brand? { brand } : {}),
-      ...(carBrand? { carBrand } : {}),
+      ...(carModel? { carModel } : {}),
       ...(quantity? { quantity } : {}),
-      ...(partCode? { partCode } : {}),
+      ...(article? { article } : {}),
       ...(vin? { vin } : {}),
       ...(type? { type } : {}),
       ...(price? { price } : {}),
@@ -97,9 +98,9 @@ export class PartsManagerService {
     const queryBuilder = this.partRepository.createQueryBuilder('part');
     name && queryBuilder.andWhere('part.name = :name', { name });
     brand && queryBuilder.andWhere('part.brand = :brand', { brand });
-    carBrand && queryBuilder.andWhere('part.carBrand = :carBrand', { carBrand });
+    carModel && queryBuilder.andWhere('part.carModel = :carModel', { carModel });
     quantity && queryBuilder.andWhere('part.quantity = :quantity', { quantity });
-    partCode && queryBuilder.andWhere('part.partCode = :partCode', { partCode });
+    article && queryBuilder.andWhere('part.article = :article', { article });
     vin && queryBuilder.andWhere('part.vin = :vin', { vin });
     type && queryBuilder.andWhere('part.type = :type', { type });
     price && queryBuilder.andWhere('part.price = :price', { price });
@@ -108,8 +109,10 @@ export class PartsManagerService {
       queryBuilder.andWhere(new Brackets(qb => {
         qb.where('LOWER(part.name) LIKE LOWE(:search)', { search: `%${search}%` });
         qb.orWhere('LOWER(part.brand) LIKE LOWE(:search)', { search: `%${search}%` });
-        qb.orWhere('LOWER(part.carBrand) LIKE LOWE(:search)', { search: `%${search}%` });
+        qb.orWhere('LOWER(part.carModel) LIKE LOWE(:search)', { search: `%${search}%` });
         qb.orWhere('LOWER(part.vin) LIKE LOWE(:search)', { search: `%${search}%` });
+        qb.orWhere('LOWER(part.article) LIKE LOWE(:search)', { search: `%${search}%` });
+        qb.orWhere('LOWER(part.quantity) LIKE LOWE(:search)', { search: `%${search}%` });
         qb.orWhere('LOWER(part.type) LIKE LOWE(:search)', { search: `%${search}%` });
         qb.orWhere('LOWER(part.price) LIKE LOWE(:search)', { search: `%${search}%` });
       }))
