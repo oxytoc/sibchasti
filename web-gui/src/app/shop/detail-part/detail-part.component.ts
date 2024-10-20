@@ -1,10 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
 
 import { ApiService } from '../../services/api.service';
 import { ObjectInformation, Part, TranlatedKeyPart } from '../../interfaces';
-import { AddedPartsToCartEventService } from '../added-parts-to-cart-event.service';
-import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
+import { AddedPartsToCartEventService } from '../../share/services/added-parts-to-cart-event.service';
 
 @Component({
   selector: 'app-detail-part',

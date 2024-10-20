@@ -1,0 +1,35 @@
+.cart {
+  min-height: calc(86% - 20px);
+  background: #fff;
+  margin: 10px 0;
+  padding: 10px 20px;
+
+  .cart-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .table-container {
+    margin-bottom: 10px;
+
+    .table-img {
+      width: 90px;
+      height: 90px;
+
+      img {
+        width: inherit;
+        height: inherit;
+      }
+    }
+  }
+
+  .cart-actions {
+    padding: 0 16px;
+
+    button {
+      min-width: 100%;
+    }
+  }
+}

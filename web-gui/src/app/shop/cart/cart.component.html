@@ -1,7 +1,67 @@
-<button
-    mat-flat-button
-    color="primary"
-    (click)="openCartDialog()">
-  Корзина
-  <span class="cart-quantity" *ngIf="cartQuantity$ | async as quantity">{{ !quantity ? 0 : quantity }}</span>
-</button>
+<div class="cart">
+  <h1>Корзина</h1>
+
+  <div class="cart-container">
+    <div class="table-container"> 
+      <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                          [checked]="selection.hasValue() && isAllSelected()"
+                          [indeterminate]="selection.hasValue() && !isAllSelected()">
+            </mat-checkbox>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <mat-checkbox (click)="$event.stopPropagation()"
+                          (change)="$event ? selection.toggle(row) : null"
+                          [checked]="selection.isSelected(row)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="partImageUrl">
+          <th mat-header-cell *matHeaderCellDef> Запчасть </th>
+          <td mat-cell *matCellDef="let element" class="table-img"> <img [src]="element.partImageUrl"> </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef> Описание </th>
+          <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="price">
+          <th mat-header-cell *matHeaderCellDef> Цена </th>
+          <td mat-cell *matCellDef="let element"> {{element.price}} </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="quantity">
+          <th mat-header-cell *matHeaderCellDef> Колличество </th>
+          <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+        </ng-container>
+      
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+
+    <mat-card class="cart-actions" appearance="outlined">
+      <mat-card-header>
+        <mat-card-title><h2>Ваша корзина</h2></mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <p>Выбрано товаров - {{selection.selected.length}}</p>
+        <p></p>
+      </mat-card-content>
+
+      <mat-card-footer>
+        <button mat-flat-button
+            [disabled]="!selection.selected.length"
+            color="primary"
+            (click)="buy()">
+          Купить
+        </button>
+      </mat-card-footer>
+    </mat-card>
+  </div>
+</div>

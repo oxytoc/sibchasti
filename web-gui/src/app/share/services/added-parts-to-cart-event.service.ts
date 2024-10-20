@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { Part } from '../interfaces';
+import { Part } from '../../interfaces';
+
 
 @Injectable()
 export class AddedPartsToCartEventService {

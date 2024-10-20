@@ -1,0 +1,7 @@
+<button
+    mat-flat-button
+    color="primary"
+    (click)="openCart()">
+  Корзина
+  <span class="cart-quantity" *ngIf="cartQuantity$ | async as quantity">{{ !quantity ? 0 : quantity }}</span>
+</button>

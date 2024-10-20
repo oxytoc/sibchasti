@@ -4,8 +4,6 @@ import { CommonModule } from '@angular/common';
 import { ShopPartsComponent } from './shop-parts.component';
 import { MaterialModule } from '../../share/material/material.module';
 import { FiltersModule } from '../../share/filters/filters.module';
-import { CartDialogComponent } from '../cart/cart-dialog/cart-dialog.component';
-import { CartComponent } from '../cart/cart.component';
 import { PartComponent } from './parts/part/part.component';
 import { PartsComponent } from './parts/parts.component';
 import { ShopFiltersComponent } from './shop-filters/shop-filters.component';
@@ -19,8 +17,6 @@ const routes: Routes = [{ path: '', component: ShopPartsComponent }];
     PartsComponent,
     PartComponent,
     ShopFiltersComponent,
-    CartComponent,
-    CartDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -33,8 +29,6 @@ const routes: Routes = [{ path: '', component: ShopPartsComponent }];
     PartsComponent,
     PartComponent,
     ShopFiltersComponent,
-    CartComponent,
-    CartDialogComponent,
   ],
 })
 export class ShopPartsModule { }
