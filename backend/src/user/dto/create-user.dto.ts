@@ -36,7 +36,7 @@ export class CreateUserDto {
 
   @ApiProperty()
   @IsString()
-  @IsEnum(['f', 'm', 'u'])
+  @IsEnum(['f', 'm'])
   gender: string;
 
   @ApiProperty()

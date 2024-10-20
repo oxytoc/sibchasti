@@ -30,8 +30,13 @@ export class UserController {
     return this.userService.updateUser(+id, updateUserDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string): Observable<{affected?: number}> {
-    return this.userService.removeUser(+id);
+  @Post("create")
+  signUp(@Body() createUser: CreateUserDto) {
+    return this.userService.createUser(createUser);
+  }
+
+  @Post("create")
+  remove(@Param('id') ids: string[]): Observable<{affected?: number}> {
+    return this.userService.removeUser(ids);
   }
 }

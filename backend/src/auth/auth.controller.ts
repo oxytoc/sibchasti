@@ -30,7 +30,7 @@ export class AuthController {
   @ApiOperation({ summary: "User Signup" })
   @ApiResponse({
     status: 200,
-    description: "The record found",
+    description: "The record create",
     type: [User],
   })
   signUp(@Body() signUpDto: CreateUserDto) {

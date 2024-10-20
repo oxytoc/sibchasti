@@ -46,7 +46,7 @@ export class UserService {
     return from(this.userRepository.save(user));
   }
 
-  removeUser(id: number): Observable<{ affected?: number }> {
-    return from(this.userRepository.delete(id));
+  removeUser(ids: string[]): Observable<{ affected?: number }> {
+    return from(this.userRepository.delete(ids.map(id => +id)));
   }
 }
