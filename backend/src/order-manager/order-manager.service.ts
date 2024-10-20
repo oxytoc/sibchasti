@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestj
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 
-import { Order } from './entity/order.entity';
+import { Order, OrderStatus } from './entity/order.entity';
 import { Part } from 'src/parts-manager/entity/part.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { PartQuantity } from './entity/part-quantity.entity';
@@ -64,7 +64,8 @@ export class OrderManagerService {
 
     const order = this.orderRepository.create({
       partQuantities,
-      client
+      client,
+      orderStatus: OrderStatus.open
     });
 
     try {

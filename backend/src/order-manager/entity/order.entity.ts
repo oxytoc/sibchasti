@@ -1,12 +1,20 @@
-import { CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 import { PartQuantity } from "./part-quantity.entity";
 import { User } from "src/user/entities/user.entity";
+
+export enum OrderStatus {
+  open = 'open',
+  closed = 'closed'
+}
 
 @Entity()
 export class Order {
   @PrimaryGeneratedColumn()
     id: number;
+
+  @Column({ type: 'enum', enum: ['open', 'closed'] })
+    orderStatus: OrderStatus;
 
   @CreateDateColumn()
     orderDate: string;
