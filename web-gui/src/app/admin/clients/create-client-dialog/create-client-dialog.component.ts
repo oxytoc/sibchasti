@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatDialogRef } from '@angular/material/dialog';
 
 import { ApiService } from '../../../services/api.service';
+import { Role } from '../../../interfaces';
 
 @Component({
   selector: 'app-create-client-dialog',
@@ -10,6 +11,8 @@ import { ApiService } from '../../../services/api.service';
   styleUrl: './create-client-dialog.component.scss'
 })
 export class CreateClientDialogComponent {
+  readonly roles = Object.keys(Role);
+
   form: FormGroup = this.formBuilder.group({
     firstName: new FormControl('', [Validators.required]),
     secondName: new FormControl('', [Validators.required]),
@@ -28,7 +31,7 @@ export class CreateClientDialogComponent {
   }
 
   createClient(): void {
-    this.service.createClient(this.form.value).subscribe(
+    this.service.createUser(this.form.value).subscribe(
       () => {
         this.dialogRef.close(true);
       }

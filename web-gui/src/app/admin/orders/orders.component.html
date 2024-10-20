@@ -46,6 +46,11 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> ID клиента </th>
       <td mat-cell *matCellDef="let element"> {{element.clientId}} </td>
     </ng-container>
+
+    <ng-container matColumnDef="orderStatus">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Статус заказа </th>
+      <td mat-cell *matCellDef="let element"> {{element.orderStatus}} </td>
+    </ng-container>
   
     <ng-container matColumnDef="partQuantities">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Заказанные запчасти </th>

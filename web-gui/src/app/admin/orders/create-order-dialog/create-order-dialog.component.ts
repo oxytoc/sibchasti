@@ -4,7 +4,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject, Observable, Subscription, combineLatest } from 'rxjs';
 
 import { ApiService } from '../../../services/api.service';
-import { Client, Part } from '../../../interfaces';
+import { User, Part } from '../../../interfaces';
 
 
 @Component({
@@ -22,7 +22,7 @@ export class CreateOrderDialogComponent implements OnInit {
       }),
     ])
   })
-  clients: Client[] = []; 
+  clients: User[] = []; 
   parts: Part[] = [];
 
   private _isLoading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
@@ -36,7 +36,7 @@ export class CreateOrderDialogComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.sub.add(combineLatest([this.service.getClients(), this.service.getParts({})])
+    this.sub.add(combineLatest([this.service.getUsers(), this.service.getParts({})])
       .subscribe(([clients, parts]) => {
         this.clients = clients; 
         this.parts = parts;

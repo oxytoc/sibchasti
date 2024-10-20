@@ -31,7 +31,7 @@ export class OrdersComponent {
       switchMap(() => this.service.getOrders()),
     )
 
-  displayedColumns: string[] = ['select', 'id', 'orderDate', 'clientId', 'partQuantities'];
+  displayedColumns: string[] = ['select', 'id', 'orderDate', 'clientId', 'partQuantities', 'orderStatus',];
   selection = new SelectionModel<Order>(true, []);
   
   sub: Subscription = new Subscription();

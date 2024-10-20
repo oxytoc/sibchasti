@@ -13,23 +13,48 @@ export interface Part {
   description: string;
 }
 
+export enum TranlatedKeyPart {
+  brand = 'Марка',
+  carModel = 'Модель',
+  article = 'Артикул',
+  type = 'Тип',
+  quantity = 'Колличество',
+  vin = 'Вин номер',
+}
+
 export interface ObjectInformation {
   parameter: string;
   value: string;
 }
 
-export interface Client {
+export enum Role {
+  'm' = 'm',
+  'f' = 'f'
+}
+
+export interface User {
   id: number;
+  username: string;
+  password: string;
+  email: string;
+  age: number;
+  gender: Role;
   firstName: string;
   secondName: string;
   thirdName: string;
   phoneNumber: string;
 }
 
+export enum OrderStatus {
+  open = 'open',
+  closed = 'closed'
+}
+
 export interface Order {
   id: number;
   orderDate: string;
   clientId: number,
+  orderStatus: OrderStatus,
   partQuantities: PartQuantity[];
 }
 

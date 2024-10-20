@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SelectionModel } from '@angular/cdk/collections';
 import { BehaviorSubject, Observable, Subscription, filter, switchMap, tap } from 'rxjs';
 
-import { Client } from '../../interfaces';
+import { User } from '../../interfaces';
 import { ApiService } from '../../services/api.service';
 import { CreateClientDialogComponent } from './create-client-dialog/create-client-dialog.component';
 
@@ -19,19 +19,19 @@ export class ClientsComponent implements AfterViewInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  dataSource: MatTableDataSource<Client> = new MatTableDataSource();
+  dataSource: MatTableDataSource<User> = new MatTableDataSource();
 
   private _isLoading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   isLoading$: Observable<boolean> = this._isLoading.asObservable();
   private _update: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  updateDataSource$: Observable<Client[]> = this._update.asObservable()
+  updateDataSource$: Observable<User[]> = this._update.asObservable()
     .pipe(
       tap(() => this._isLoading.next(true)),
-      switchMap(() => this.service.getClients()),
+      switchMap(() => this.service.getUsers()),
     )
 
   displayedColumns: string[] = ['select', 'id', 'secondName','firstName', 'thirdName', 'phoneNumber'];
-  selection = new SelectionModel<Client>(true, []);
+  selection = new SelectionModel<User>(true, []);
   
   sub: Subscription = new Subscription();
 
@@ -77,7 +77,7 @@ export class ClientsComponent implements AfterViewInit, OnDestroy {
   }
 
   deleteClients(): void {
-    this.sub.add(this.service.deleteClients(this.selection.selected).subscribe(
+    this.sub.add(this.service.deleteUsers(this.selection.selected).subscribe(
       () => {
         this.selection.clear();
         this._update.next(true);

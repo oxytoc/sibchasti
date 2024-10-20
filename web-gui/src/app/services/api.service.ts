@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 
-import { Client, LoginInterface, Order, Part, PredictParts } from '../interfaces';
+import { User, LoginInterface, Order, Part, PredictParts, OrderStatus } from '../interfaces';
 
 interface ServerPartQuantity {
   id: number;
@@ -13,7 +13,8 @@ interface ServerPartQuantity {
 interface ServerOrder {
   id: number;
   orderDate: string;
-  client: Client;
+  client: User;
+  orderStatus: OrderStatus;
   partQuantities: ServerPartQuantity[];
 }
 
@@ -45,18 +46,18 @@ export class ApiService {
     return this.http.post<any>(path, partIds);
   }
 
-  getClients(): Observable<Client[]> {
-    const path = this.baseUrl + '/clients';
+  getUsers(): Observable<User[]> {
+    const path = this.baseUrl + '/users';
     return this.http.get<any>(path);
   }
 
-  createClient(client: Client): Observable<any> {
-    const path = this.baseUrl + '/clients';
-    return this.http.post<any>(path, client);
+  createUser(user: User): Observable<any> {
+    const path = this.baseUrl + '/users/create';
+    return this.http.post<any>(path, user);
   }
 
-  deleteClients(clients: Client[]): Observable<any> {
-    const path = this.baseUrl + '/clients/delete';
+  deleteUsers(clients: User[]): Observable<any> {
+    const path = this.baseUrl + '/users/delete';
     const partIds = clients.map(client => client.id)
     return this.http.post<any>(path, partIds);
   }
