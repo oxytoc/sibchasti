@@ -69,12 +69,12 @@ export class PartsManagerService {
     );
   }
 
-  findPart(id: number): Observable<Part> {
-    return from(this.partRepository.findOne({ where: { id: id } })).pipe(
-      catchError(error => { throw new NotFoundException(`Part ${id} not found`); }),
+  findParts(ids: number[]): Observable<Part[]> {
+    return from(this.partRepository.find({ where: { id: In(ids) } })).pipe(
+      catchError(error => { throw new NotFoundException(`Parts not found`); }),
       map(part => {
         if (!part) {
-          throw new NotFoundException(`Part ${id} not found`);
+          throw new NotFoundException(`Part not found`);
         }
     
         return part;

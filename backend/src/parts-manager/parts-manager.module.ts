@@ -13,6 +13,6 @@ import { DatabaseFilesService } from 'src/shared/database-file/database-file.ser
   ],
   controllers: [PartsManagerController],
   providers: [PartsManagerService, DatabaseFilesService],
-  exports: [PartsManagerModule]
+  exports: [PartsManagerModule, PartsManagerService, DatabaseFilesService]
 })
 export class PartsManagerModule {}
