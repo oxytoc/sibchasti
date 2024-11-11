@@ -1,5 +1,5 @@
 <app-filters
-    [filters]="filters"
+    [filters]="filters$ | async"
     (filtersChanged)="setParams($event)"
     (filtersResetEvent)="resetParams()">
 </app-filters>
