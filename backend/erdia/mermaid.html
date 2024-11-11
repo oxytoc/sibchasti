@@ -238,29 +238,34 @@
         <h3 class="title is-4">Diagram</h3>
         <div class="mermaid-box">
           <pre id="mermaid-pre" class="mermaid">
-                %%{init: {'theme':'default'}}%%
+                %%{init: {'theme':'dark'}}%%
 
 erDiagram
 
-"client(Client)" {
+"database_file(DatabaseFile)" {
   *number id    PK    
-  *string firstName    
-  *string secondName    
-  *string thirdName    
-  *string phoneNumber    
+  *string filename    
+  *bytea data    
 }
 
 
 
-"order(Order)" {
+"part(Part)" {
   *number id    PK    
-  *timestamp orderDate    
-  number client    FK    
+  *string brand    
+  *string carModel    
+  *string description    
+  *string name    
+  *number quantity    
+  *number article    
+  *string vin    
+  *string type    
+  *number price    
+  number partImageId    FK,UK    
 }
 
 
-"order(Order)"  }o  --  o|  "client(Client)":  "clientId"
-"order(Order)"  }o  --  o{  "part_quantity(PartQuantity)":  "orderId,orderId"
+"part(Part)"  |o  --  o|  "database_file(DatabaseFile)":  "partImageId"
 
 "part_quantity(PartQuantity)" {
   *number id    PK    
@@ -271,24 +276,37 @@ erDiagram
 
 "part_quantity(PartQuantity)"  }o  --  o|  "part(Part)":  "partId"
 
-"part(Part)" {
+"order(Order)" {
   *number id    PK    
-  *string brand    
-  *string name    
-  *number quantity    
-  *number partCode    
-  *string vin    
-  *string type    
-  *number price    
+  *enum orderStatus    
+  *timestamp orderDate    
+  number client    FK    
+}
+
+
+"order(Order)"  }o  --  o|  "user(User)":  "clientId"
+"order(Order)"  }o  --  o{  "part_quantity(PartQuantity)":  "orderId,orderId"
+
+"user(User)" {
+  *number id    PK    
+  *varchar(15) username    
+  *varchar(40) email    
+  *int age    
+  *varchar password    
+  *varchar(30) firstName    
+  *varchar(30) secondName    
+  *varchar(30) thirdName    
+  *varchar(11) phoneNumber    
+  *enum gender    
+  *enum role    
 }
 
 
 
-"popular_part(PopularPart)" {
+"forecast(Forecast)" {
   *number id    PK    
-  json errors    
-  json timeSeries    
-  json predicts    
+  *number period    
+  json forecast    
 }
 
 
@@ -299,8 +317,8 @@ erDiagram
 }
 
 
-"order_part_quantities_part_quantity(order_part_quantities_part_quantity)"  }|  --  ||  "order(Order)":  "orderId"
 "order_part_quantities_part_quantity(order_part_quantities_part_quantity)"  }|  --  ||  "part_quantity(PartQuantity)":  "orderId"
+"order_part_quantities_part_quantity(order_part_quantities_part_quantity)"  }|  --  ||  "order(Order)":  "orderId"
 
                 </pre
           >
@@ -331,29 +349,34 @@ erDiagram
         </h2>
 
         <textarea rows="10" class="form-control meramid-source-code">
-%%{init: {'theme':'default'}}%%
+%%{init: {'theme':'dark'}}%%
 
 erDiagram
 
-"client(Client)" {
+"database_file(DatabaseFile)" {
   *number id    PK    
-  *string firstName    
-  *string secondName    
-  *string thirdName    
-  *string phoneNumber    
+  *string filename    
+  *bytea data    
 }
 
 
 
-"order(Order)" {
+"part(Part)" {
   *number id    PK    
-  *timestamp orderDate    
-  number client    FK    
+  *string brand    
+  *string carModel    
+  *string description    
+  *string name    
+  *number quantity    
+  *number article    
+  *string vin    
+  *string type    
+  *number price    
+  number partImageId    FK,UK    
 }
 
 
-"order(Order)"  }o  --  o|  "client(Client)":  "clientId"
-"order(Order)"  }o  --  o{  "part_quantity(PartQuantity)":  "orderId,orderId"
+"part(Part)"  |o  --  o|  "database_file(DatabaseFile)":  "partImageId"
 
 "part_quantity(PartQuantity)" {
   *number id    PK    
@@ -364,24 +387,37 @@ erDiagram
 
 "part_quantity(PartQuantity)"  }o  --  o|  "part(Part)":  "partId"
 
-"part(Part)" {
+"order(Order)" {
   *number id    PK    
-  *string brand    
-  *string name    
-  *number quantity    
-  *number partCode    
-  *string vin    
-  *string type    
-  *number price    
+  *enum orderStatus    
+  *timestamp orderDate    
+  number client    FK    
+}
+
+
+"order(Order)"  }o  --  o|  "user(User)":  "clientId"
+"order(Order)"  }o  --  o{  "part_quantity(PartQuantity)":  "orderId,orderId"
+
+"user(User)" {
+  *number id    PK    
+  *varchar(15) username    
+  *varchar(40) email    
+  *int age    
+  *varchar password    
+  *varchar(30) firstName    
+  *varchar(30) secondName    
+  *varchar(30) thirdName    
+  *varchar(11) phoneNumber    
+  *enum gender    
+  *enum role    
 }
 
 
 
-"popular_part(PopularPart)" {
+"forecast(Forecast)" {
   *number id    PK    
-  json errors    
-  json timeSeries    
-  json predicts    
+  *number period    
+  json forecast    
 }
 
 
@@ -392,8 +428,8 @@ erDiagram
 }
 
 
-"order_part_quantities_part_quantity(order_part_quantities_part_quantity)"  }|  --  ||  "order(Order)":  "orderId"
 "order_part_quantities_part_quantity(order_part_quantities_part_quantity)"  }|  --  ||  "part_quantity(PartQuantity)":  "orderId"
+"order_part_quantities_part_quantity(order_part_quantities_part_quantity)"  }|  --  ||  "order(Order)":  "orderId"
 
 </textarea
         >
