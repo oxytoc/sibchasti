@@ -65,7 +65,7 @@ export class OrderManagerService {
     const order = this.orderRepository.create({
       partQuantities,
       client,
-      orderStatus: OrderStatus.open
+      orderStatus: orderDto.orderStatus ? orderDto.orderStatus : OrderStatus.open
     });
 
     try {

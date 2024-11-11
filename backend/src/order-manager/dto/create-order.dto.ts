@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsArray, IsNumber, ValidateNested } from "class-validator";
+import { IsArray, isEnum, IsNumber, ValidateNested } from "class-validator";
+import { OrderStatus } from "../entity/order.entity";
 
 export interface PartQuantityInterface {
   partId: string;
@@ -15,4 +16,7 @@ export class CreateOrderDto {
   @IsArray()
   @ValidateNested({ each: true })
     partQuantity: PartQuantityInterface[];
+
+  @ApiProperty()
+    orderStatus: OrderStatus;
 }
