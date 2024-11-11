@@ -1,23 +1,13 @@
 <div class="toolbar">
   <form [formGroup]="form">
     <mat-form-field>
-      <mat-label>Начало</mat-label>
-      <input matInput [matDatepicker]="picker1" formControlName="dateFrom">
-      <mat-hint>MM/DD/YYYY</mat-hint>
-      <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
-      <mat-datepicker #picker1></mat-datepicker>
-    </mat-form-field>
-
-    <mat-form-field>
-      <mat-label>Конец</mat-label>
-      <input matInput [matDatepicker]="picker2" formControlName="dateTill">
-      <mat-hint>MM/DD/YYYY</mat-hint>
-      <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
-      <mat-datepicker #picker2></mat-datepicker>
+      <mat-label>Период</mat-label>
+      <input matInput type="number" formControlName="period">
     </mat-form-field>
   </form>
 
-  <button mat-flat-button color="primary" (click)="createPopularParts()">Создать популярные запчасти</button>
+  <button mat-flat-button color="primary" (click)="makePredictForecast()">Спрогнозировать спрос на запчасти</button>
+  <button mat-flat-button color="primary" (click)="retrainPredictForecast()">Переобучить модель</button>
 </div>
 
 <mat-form-field class="filter">
@@ -39,19 +29,14 @@
       <td mat-cell *matCellDef="let element"> {{element.id}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="timeSeries">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Обучающие данные </th>
+    <ng-container matColumnDef="period">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Период </th>
       <td mat-cell *matCellDef="let element"> {{element.timeSeries}} </td>
     </ng-container>
   
-    <ng-container matColumnDef="predicts">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Предсказанные данные </th>
-      <td mat-cell *matCellDef="let element"> {{element.predicts}} </td>
-    </ng-container>
-  
-    <ng-container matColumnDef="errors">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Ошибки </th>
-      <td mat-cell *matCellDef="let element"> {{element.errors}} </td>
+    <ng-container matColumnDef="forecast">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Прогнозирование спроса </th>
+      <td mat-cell *matCellDef="let element"> {{element.forecast}} </td>
     </ng-container>
   
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
