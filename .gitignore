@@ -8,6 +8,7 @@
 /backend/node_modules
 /web-gui/node_modules
 /web-gui/.angular
+/machine-learnings/model
 
 # Logs
 logs
