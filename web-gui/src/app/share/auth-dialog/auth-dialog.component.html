@@ -1,0 +1,28 @@
+<h2 mat-dialog-title> Войти </h2>
+
+<mat-dialog-content>
+  <div *ngIf="isLoading$ | async">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div *ngIf="isSignInForm$ | async; else signUpTemplate">
+    <app-sign-in [signInForm]="signInForm"></app-sign-in>
+    <button class="changeFormBtn" mat-button (click)="changeToSignUp()">Зарегистрироваться</button>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions class="actions">
+  <ng-container *ngIf="isSignInForm$ | async; else signUpActions">
+    <button mat-button (click)="signIn()">Войти</button>
+    <button mat-button mat-dialog-close>Закрыть</button>
+  </ng-container>
+  <ng-template #signUpActions>
+    <button mat-button (click)="signUp()">Зарегистрироваться</button>
+    <button mat-button mat-dialog-close>Закрыть</button>
+  </ng-template>
+</mat-dialog-actions>
+
+<ng-template #signUpTemplate>
+  <app-sign-up [signUpForm]="signUpForm"></app-sign-up>
+  <button mat-button class="changeFormBtn" (click)="changeToSignIn()">Войти</button>
+</ng-template>

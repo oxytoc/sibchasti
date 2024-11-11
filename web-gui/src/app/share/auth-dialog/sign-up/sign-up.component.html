@@ -1,0 +1,58 @@
+<form class="form" [formGroup]="signUpForm">
+  <div class="form-row">
+    <mat-form-field>
+      <mat-label>Имя пользователя</mat-label>
+      <input matInput formControlName="username">
+    </mat-form-field>
+  
+    <mat-form-field>
+      <mat-label>Пароль</mat-label>
+      <input matInput formControlName="password">
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email">
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+    <mat-form-field>
+      <mat-label>Имя</mat-label>
+      <input matInput formControlName="firstName">
+    </mat-form-field>
+    
+    <mat-form-field>
+      <mat-label>Фамилия</mat-label>
+      <input matInput formControlName="secondName">
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+    <mat-form-field>
+      <mat-label>Отчество</mat-label>
+      <input matInput formControlName="thirdName">
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+    <mat-form-field>
+      <mat-label>Номер телефона</mat-label>
+      <input matInput formControlName="phoneNumber">
+    </mat-form-field>
+  
+    <mat-form-field>
+      <mat-label>Возраст</mat-label>
+      <input matInput formControlName="age">
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+    <mat-form-field>
+      <mat-label>Пол</mat-label>
+      <input matInput formControlName="gender">
+    </mat-form-field>
+  </div>
+</form>
