@@ -25,16 +25,15 @@ export class AnalyzePartsComponent {
   updateDataSource$: Observable<PredictParts[]> = this._update.asObservable()
     .pipe(
       tap(() => this._isLoading.next(true)),
-      switchMap(() => this.service.getPopularParts()),
+      switchMap(() => this.service.getForecastDemands()),
     )
 
-  displayedColumns: string[] = ['id', 'timeSeries', 'predicts', 'errors' ];
+  displayedColumns: string[] = ['id', 'period', 'forecast' ];
   
   sub: Subscription = new Subscription();
 
   form: FormGroup = this.formBuilder.group({
-    dateFrom: new FormControl(null),
-    dateTill: new FormControl(null),
+    period: new FormControl(null),
   })
 
   constructor (
@@ -63,10 +62,13 @@ export class AnalyzePartsComponent {
     }
   }
   
-  createPopularParts(): void {
-    const dateFrom: Date = this.form.get('dateFrom')?.value as Date;
-    const dateTill: Date = this.form.get('dateTill')?.value as Date;
-    this.sub.add(this.service.createPopularParts(dateFrom, dateTill).subscribe());
+  makePredictForecast(): void {
+    const period: number = this.form.get('period')?.value;
+    this.sub.add(this.service.makePredictForecast(period).subscribe());
+  }
+
+  retrainPredictForecast(): void {
+    this.sub.add(this.service.retrainForecast().subscribe());
   }
 
   ngOnDestroy(): void {

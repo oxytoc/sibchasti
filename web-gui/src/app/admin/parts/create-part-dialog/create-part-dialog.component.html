@@ -27,12 +27,17 @@
     <div>
       <mat-form-field>
         <mat-label>Марка</mat-label>
-        <input matInput formControlName="brand">
+        <mat-select formControlName="brand">
+          <mat-option *ngFor="let brand of brands" [value]="brand">{{ brand }}</mat-option>
+        </mat-select>
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Модель автомобиля</mat-label>
         <input matInput formControlName="carModel">
+        <mat-select formControlName="carModel">
+          <mat-option *ngFor="let brand of getModelsCar(form.get('brand').value)" [value]="brand">{{ brand }}</mat-option>
+        </mat-select>
       </mat-form-field>
 
       <mat-form-field>

@@ -32,6 +32,9 @@ export class FilterComponent implements OnInit, OnDestroy {
         case FilterType.STRING_FILTER:
           this.formFilter = new FormControl<string>('');
           break;
+        case FilterType.ENUM_FILTER:
+          this.formFilter = new FormControl<string>('');
+          break;
         case FilterType.NUMBER_FILTER:
           this.formFilter = new FormControl<number>(null);
           break;

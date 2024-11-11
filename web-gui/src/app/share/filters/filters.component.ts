@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 
 import { FilterChanged, FilterInterface } from '../../interfaces';
 import { filter, Subject } from 'rxjs';
+import { FilterComponent } from './filter/filter.component';
 
 
 @Component({
@@ -13,6 +14,7 @@ export class FiltersComponent {
   @Input() filters: FilterInterface[] = [];
   @Output() filtersChanged = new EventEmitter<Record<string, any>>();
   @Output() filtersResetEvent = new EventEmitter<void>();
+  @ViewChildren(FilterComponent) viewFilters: QueryList<FilterComponent>
 
   private _filtersValues: Record<string, any> = {};
   private filtersResetValues = new Subject<Object>();
