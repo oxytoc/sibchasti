@@ -1,12 +1,15 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
+import { catchError, from, map, Observable, switchMap } from 'rxjs';
 
 import { Order, OrderStatus } from './entity/order.entity';
 import { Part } from 'src/parts-manager/entity/part.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { PartQuantity } from './entity/part-quantity.entity';
 import { User } from 'src/user/entities/user.entity';
+import { CloseOrderDto } from './dto/close-orde.dto';
+
 
 @Injectable()
 export class OrderManagerService {
@@ -34,14 +37,17 @@ export class OrderManagerService {
     return client;
   }
 
-  private async findOrder(id: string): Promise<Order> {
-    const order = await this.orderRepository.findOne({ where: { id: +id } });
-
-    if (!order) {
-      throw new NotFoundException(`Order ${id} not found`);
-    }
-
-    return order;
+  private findOrder(id: string): Observable<Order> {
+    return from(this.orderRepository.findOne({ where: { id: +id } })).pipe(
+      catchError(error => { throw new NotFoundException(`Order not found`); }),
+      map(order => {
+        if (!order) {
+          throw new NotFoundException(`Order not found`);
+        }
+    
+        return order;
+      })
+    );
   }
 
   async createOrder(orderDto: CreateOrderDto): Promise<Order> {
@@ -83,6 +89,15 @@ export class OrderManagerService {
   async deleteOrders(ids: number[]): Promise<Order[]> {
     const order: Order[] = await this.orderRepository.find({ where: {id: In(ids) }});
     return this.orderRepository.remove(order);
+  }
+
+  closeOrder(closeOrderDto: CloseOrderDto): Observable<any> {
+    return this.findOrder(closeOrderDto.orderId).pipe(switchMap(order => {
+      return from(this.orderRepository.preload({
+        orderStatus: OrderStatus.closed,
+        ...order,
+      }))
+    }))
   }
 
   getAllOrders(): Promise<Order[]> {

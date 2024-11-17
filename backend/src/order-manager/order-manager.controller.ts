@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { OrderManagerService } from './order-manager.service';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { CloseOrderDto } from './dto/close-orde.dto';
 
 @Controller('')
 export class OrderManagerController {
@@ -21,5 +22,10 @@ export class OrderManagerController {
   delete(@Body() ids: number[]) {
     this.orderManager.deleteOrders(ids);
     return;
+  }
+
+  @Post('/closeOrder')
+  closeOrder(@Body() closeOrderDto: CloseOrderDto) {
+    return this.orderManager.closeOrder(closeOrderDto);
   }
 }
