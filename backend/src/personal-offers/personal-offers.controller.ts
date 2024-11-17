@@ -6,8 +6,8 @@ export class PersonalOffersController {
   constructor(private readonly personalOffersService: PersonalOffersService) {}
 
   @Post("getOffers")
-  getRecommendations(@Body() getRecomend: { items: string[] },) {
-    return this.personalOffersService.getRecommendations(getRecomend.items);
+  getRecommendations(@Body() getRecomend: { userId: number },) {
+    return this.personalOffersService.getRecommendations(getRecomend.userId);
   }
 
   @Post("retrainOffers")

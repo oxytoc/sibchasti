@@ -4,44 +4,18 @@ from flask import Flask, request, jsonify
 import joblib
 import pandas as pd
 import numpy as np
-from personal import train_model
+from personal import generate_recommendations, train_model
 from forecasting import train_forecast, predict_forecast
 
 app = Flask(__name__)
 
-# Загрузка модели и данных
-tfidf = joblib.load('/app/model/tfidf_vectorizer.pkl')
-cosine_sim = joblib.load('/app/model/cosine_sim_matrix.pkl')
-df = joblib.load('/app/model/item_data.pkl')
-
-def get_recommendations(item_names):
-    for item_name in item_names:
-        if item_name.strip() not in [str(name).strip() for name in df['name'].values]:
-            return []
-    
-    # Находим индексы товаров по их именам
-    indices = [df.index[df['name'] == item].tolist()[0] for item in item_names]
-
-        # Рассчитываем среднюю схожесть по всем выбранным товарам
-    sim_scores = np.mean([cosine_sim[idx] for idx in indices], axis=0)
-    
-    # Сортируем товары по средней схожести
-    sim_scores = list(enumerate(sim_scores))
-    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
-    
-    # Исключаем исходные товары из рекомендаций
-    sim_scores = [score for score in sim_scores if score[0] not in indices]
-    
-    recommended_items = df.iloc[[i[0] for i in sim_scores]].to_dict(orient='records')
-    return recommended_items
-
 @app.route('/recommend-offers', methods=['POST'])
 def recommend():
     data = request.json
-    item_names = data.get('item_names')
-    if not item_names:
-        return jsonify({'error': 'item_names is required'}), 400
-    recommendations = get_recommendations(item_names)
+    user_id = data.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'user_id is required'}), 400
+    recommendations = generate_recommendations(user_id)
     return jsonify({'recommendations': recommendations})
 
 # эндпоинт для переобучения модели
