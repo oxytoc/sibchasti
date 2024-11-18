@@ -7,7 +7,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/role.enum';
-import { Public } from 'src/auth/public-stragegy';
+import { Private, Public } from 'src/auth/public-stragegy';
 
 @Controller('')
 export class UserController {
@@ -19,12 +19,13 @@ export class UserController {
     return this.userService.findAllUser();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string): Observable<User> {
-    return this.userService.viewUser(+id);
+  @Post("findOne")
+  findOne(@Body() findOneDto: {id: string}): Observable<User> {
+    return this.userService.viewUser(+findOneDto.id);
   }
 
   @Post(':id')
+  @Private()
   @Roles(Role.User)
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Observable<User> {
     return this.userService.updateUser(+id, updateUserDto);
