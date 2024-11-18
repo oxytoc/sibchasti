@@ -5,7 +5,7 @@
     <p class="mat-h3 description">{{ part.name }}</p>
     <p class="mat-h3 description">{{ part.brand + ' ' + part.carModel }}</p>
   </div>
-  <button mat-button (click)="addPartToCart()">
+  <button class="part-add" color="primary" mat-flat-button (click)="addPartToCart()">
     <span>Добавить</span>
     <mat-icon>add</mat-icon>
   </button>

@@ -5,10 +5,18 @@
 
 .part-card {
   width: 250px;
-  height: 350px;
   border: 2px solid #F5F5F5;
   border-radius: 5px;
   box-sizing: content-box;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f5f5f5cd;
+  }
+}
+
+.part-add {
+  min-width: 100%;
 }
 
 .price {

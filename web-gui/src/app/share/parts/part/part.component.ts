@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Part } from '../../../../interfaces';
 import { BehaviorSubject } from 'rxjs';
-import { ApiService } from '../../../../services/api.service';
-import { AddedPartsToCartEventService } from '../../../../share/services/added-parts-to-cart-event.service';
+import { Part } from '../../../interfaces';
+import { ApiService } from '../../../services/api.service';
+import { AddedPartsToCartEventService } from '../../services/added-parts-to-cart-event.service';
 
 
 @Component({

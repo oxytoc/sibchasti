@@ -43,7 +43,7 @@ export class ShopFiltersComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    throw new Error('Method not implemented.');
+    this.subscriptions.unsubscribe();
   }
 
   setParams(values: Record<string, any>): void {
