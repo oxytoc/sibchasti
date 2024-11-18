@@ -24,6 +24,23 @@ html {
   box-sizing: inherit;
 }
 
+  .form-field {
+    padding: 5px 0;
+
+    .mat-mdc-text-field-wrapper {
+      border-bottom: none !important;
+      border-radius: 28px;
+    }
+  
+    .mdc-line-ripple {
+      display: none
+    }
+  
+    .mat-mdc-form-field-bottom-align {
+      display: none
+   }
+  }
+
 .spinner-container {
   mat-spinner {
     left: 50%;
@@ -45,4 +62,8 @@ html {
 
 .toolbar {
   margin: 0 10px;
+}
+
+.mdc-text-field--filled {
+  --mdc-filled-text-field-container-color: #ECE6F0;
 }
