@@ -5,14 +5,16 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { jwtConstants } from './constants';
-import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from './public-stragegy';
 import { catchError, from, map, Observable, of, switchMap, tap } from 'rxjs';
-import { AuthGuard } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
+import { extractTokenFromHeader } from 'src/shared/extract-tokens-from-header';
 
+export interface TokensInterface {
+  sub: string; // id
+  username: string;
+}
 
 @Injectable()
 export class AccessTokenGuard implements CanActivate {
@@ -32,7 +34,7 @@ export class AccessTokenGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest();
-    const token = this.extractTokenFromHeader(request);
+    const token = extractTokenFromHeader(request);
     if (!token) {
       throw new UnauthorizedException();
     }
@@ -42,10 +44,7 @@ export class AccessTokenGuard implements CanActivate {
         secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
       }
     )).pipe(
-      map(payload => {
-      // 💡 We're assigning the payload to the request object here
-      // so that we can access it in our route handlers
-        request['user'] = payload;
+      map((payload: TokensInterface) => {
         return true;
       }),
       catchError((error) => {
@@ -54,9 +53,4 @@ export class AccessTokenGuard implements CanActivate {
       })
     )
   } 
-  
-  private extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    return type === 'Bearer' ? token : undefined;
-  }
 }

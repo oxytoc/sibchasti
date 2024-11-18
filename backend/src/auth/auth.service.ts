@@ -1,15 +1,22 @@
 import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { combineLatest, from, map, Observable, switchMap } from 'rxjs';
+import { combineLatest, from, map, Observable, of, switchMap } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
 import { UserService } from 'src/user/user.service';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { TokensInterface } from './auth.guard';
 
 
 export interface Tokens {
   accessToken: string;
   refreshToken: string;
+}
+
+export interface TokensAndUser {
+  tokens: Tokens;
+  userId: string;
+  username: string;
 }
 
 
@@ -20,7 +27,7 @@ export class AuthService {
     private jwtService: JwtService,
     private configService: ConfigService) {}
   
-  signIn(username: string, pass: string): Observable<Tokens> {
+  signIn(username: string, pass: string): Observable<TokensAndUser> {
     return this.usersService.findUser(username).pipe(
       switchMap(user => {
         if (!user) {
@@ -32,12 +39,19 @@ export class AuthService {
         }
         const payload = { sub: user.id, username: user.username };
         const tokens = this.getTokens(user.id.toString(), user.username);
-        return tokens;
+        return combineLatest([tokens, of(user)]);
+      }),
+      map(([tokens, user]) => {
+        return {
+          userId: user.id.toString(),
+          username: user.username,
+          tokens
+        };
       })
     );
   } 
   
-  signUp(payload: CreateUserDto): Observable<Tokens> {
+  signUp(payload: CreateUserDto): Observable<TokensAndUser> {
     return this.usersService.findUser(payload.username).pipe(
       switchMap(user => {
         if (user) {
@@ -46,30 +60,42 @@ export class AuthService {
         return this.usersService.createUser(payload);
       }),
       switchMap(newUser => {
-        const tokens = this.getTokens(newUser.id.toString(), newUser.username);
-        return tokens;
+        return combineLatest([this.getTokens(newUser.id.toString(), newUser.username), of(newUser)]);
+      }),
+      map(([tokens, user]) => {
+        return {
+          userId: user.id.toString(),
+          username: user.username,
+          tokens
+        };
       })
     )
   }
 
-  refreshTokens(refreshToken: string, username: string): Observable<Tokens> {
-    return this.usersService.findUser(username).pipe(
+  refreshTokens(refreshToken: string): Observable<TokensAndUser> {
+    return from(this.jwtService.verifyAsync(refreshToken, {
+      secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+    })).pipe(
+      switchMap((token: TokensInterface) => {
+        if (!token) {
+          throw new ForbiddenException('Access Denied');
+        }
+        return this.usersService.findUser(token.username)
+      }),
       switchMap(user => {
         if (!user) {
           throw new UnauthorizedException('User not found');
         }
-        return from(this.jwtService.verifyAsync(refreshToken, {
-          secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
-        })).pipe(
-          switchMap(token => {
-            if (!token) {
-              throw new ForbiddenException('Access Denied');
-            }
-            const tokens = this.getTokens(user.id.toString(), user.username);
-            return tokens;
-          })
-        )}
-      ));
+        const tokens = this.getTokens(user.id.toString(), user.username);
+        return tokens.pipe(
+          map(tokens => ({
+            tokens,
+            userId: user.id.toString(),
+            username: user.username,
+          }))
+        );
+      }),
+    )
   }
   
 
@@ -97,5 +123,21 @@ export class AuthService {
       ))
       .pipe(map(refreshToken => ({accessToken, refreshToken})))
     })));
+  }
+
+  verifyToken(accessToken: string): Observable<TokensAndUser> {
+    return from(this.jwtService.verifyAsync(
+      accessToken,
+      {
+        secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
+      }
+    )).pipe(map((tokens: TokensInterface) => ({
+      userId: tokens.sub,
+      username: tokens.username,
+      tokens: {
+        accessToken,
+        refreshToken: null, // Refresh token is not provided in the access token
+      }
+    })))
   }
 }

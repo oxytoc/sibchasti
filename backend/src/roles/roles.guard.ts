@@ -1,12 +1,22 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Observable } from 'rxjs';
+import { from, map, Observable, switchMap } from 'rxjs';
 import { Role } from './role.enum';
 import { ROLES_KEY } from './roles.decorator';
+import { extractTokenFromHeader } from 'src/shared/extract-tokens-from-header';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { TokensInterface } from 'src/auth/auth.guard';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+  constructor(
+    private reflector: Reflector,
+    private jwtService: JwtService,
+    private configService: ConfigService,
+    private userService: UserService,
+  ) {}
   
   canActivate(
     context: ExecutionContext,
@@ -18,7 +28,21 @@ export class RolesGuard implements CanActivate {
     if (!requiredRoles) {
       return true;
     }
-    const user = context.switchToHttp().getRequest().body;
-    return requiredRoles.some((role) => user?.role === role);
+    const request = context.switchToHttp().getRequest();
+    const token = extractTokenFromHeader(request);
+    if (!token) {
+      throw new UnauthorizedException();
+    }
+    return from(this.jwtService.verifyAsync(
+      token,
+      {
+        secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
+      }
+    )).pipe(
+      switchMap((userTokens: TokensInterface) => {
+        return this.userService.viewUser(Number(userTokens.sub))
+      }),
+      map((user) => requiredRoles.some((role) => user?.role === role)),
+    )
   }
 }

@@ -39,7 +39,13 @@ export class AuthController {
 
   @Public()
   @Post('refresh')
-  refreshTokens(@Body() refreshDto: { refreshToken: string, username: string }) {
-    return this.authService.refreshTokens(refreshDto.refreshToken, refreshDto.username);
+  refreshTokens(@Body() refreshDto: { refreshToken: string }) {
+    return this.authService.refreshTokens(refreshDto.refreshToken);
+  }
+
+  @Public()
+  @Post('verifyToken')
+  verifyToken(@Body() verifyhDto: { accessToken: string }) {
+    return this.authService.verifyToken(verifyhDto.accessToken);
   }
 }
