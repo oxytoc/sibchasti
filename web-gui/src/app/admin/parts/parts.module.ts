@@ -22,4 +22,4 @@ const routes: Routes = [{ path: '', component: PartsComponent }];
     FormsModule,
   ]
 })
-export class PartsModule { }
+export class AdminPartsModule { }

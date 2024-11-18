@@ -12,7 +12,7 @@ import { CreatePartDialogComponent } from './create-part-dialog/create-part-dial
 
 
 @Component({
-  selector: 'app-parts',
+  selector: 'app-admin-parts',
   templateUrl: './parts.component.html',
   styleUrl: './parts.component.scss'
 })
