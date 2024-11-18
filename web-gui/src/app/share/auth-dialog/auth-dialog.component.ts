@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { BehaviorSubject, Subscription, tap } from 'rxjs';
+import { BehaviorSubject, filter, Subscription, tap } from 'rxjs';
 import { MatDialogRef } from '@angular/material/dialog';
 
 import { AuthService } from '../../services/auth.service';
@@ -54,7 +54,10 @@ export class AuthDialogComponent {
     const loginValue = this.signInForm.value as LoginInterface;
     this._isLoading.next(true);
     this.subscription.add(this.authService.login(loginValue)
-      .pipe(tap(() => this._isLoading.next(false)))
+      .pipe(
+        tap(() => this._isLoading.next(false)),
+        filter((value => !!value))
+      )
       .subscribe(
         () => this.dialogRef.close(true)
       )
