@@ -10,14 +10,14 @@ export class TokenInterceptorService {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const accessToken = this.authService.getAuthorizationToken();
 
-    if (accessToken) {
+    if (accessToken !== null) {
       request = this.addToken(request, accessToken);
     }
 
     return next.handle(request).pipe(
       catchError((error) => {
         // Check if the error is due to an expired access token
-        if (error.status === 401 && accessToken) {
+        if (error.status === 401 && accessToken !== null) {
           return this.handleTokenExpired(request, next);
         }
 
