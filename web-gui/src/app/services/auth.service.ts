@@ -84,6 +84,8 @@ export class AuthService {
     localStorage.removeItem(this.authSecretKey);
     localStorage.removeItem(this.authRefreshSecretKey);
     this._isAuthenticated.next(false);
+    this._userId.next(null)
+    this._username.next(null)
     this.unsubrcibe();
     this.router.navigate(['/']);
   }
