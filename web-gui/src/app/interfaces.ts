@@ -27,9 +27,14 @@ export interface ObjectInformation {
   value: string;
 }
 
-export enum Role {
+export enum Gender {
   'm' = 'm',
   'f' = 'f'
+}
+
+export enum Role {
+  admin = 'admin',
+  user = 'user'
 }
 
 export interface User {
@@ -38,11 +43,12 @@ export interface User {
   password: string;
   email: string;
   age: number;
-  gender: Role;
+  gender: Gender;
   firstName: string;
   secondName: string;
   thirdName: string;
   phoneNumber: string;
+  role?: Role;
 }
 
 export enum OrderStatus {
@@ -63,15 +69,34 @@ export interface PartQuantity {
   partId: number;
 }
 
+export interface PartIdWithDemands {
+  partId: number;
+  demands: string[];
+}
+
 export interface PredictParts {
-  timeSeries: number[];
-  predicts: number[];
-  errors: number[];
+  id: number,
+  period: number,
+  forecast: PartIdWithDemands[]
 }
 
 export interface LoginInterface {
   username: string;
   password: string;
+}
+
+export interface SignUp {
+  name?: string;
+  username?: string;
+  age?: number;
+  gender?: string;
+  email?: string;
+  password?: string;
+  role?: string;
+  firstName?: string;
+  secondName?: string;
+  thirdName?: string;
+  phoneNumber?: string;
 }
 
 export interface DatabaseFile {
