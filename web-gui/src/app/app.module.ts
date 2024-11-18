@@ -8,8 +8,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { AppComponent } from './app.component';
 import { routes } from './app.routes';
 import { MainModule } from './main/main.module';
-import { AuthService } from './services/auth.service';
 import { TokenInterceptorService } from './services/token-interceptor.service';
+import { AuthService } from './services/auth.service';
 
 
 @NgModule({

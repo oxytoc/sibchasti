@@ -7,7 +7,7 @@ import { MainComponent } from './main.component';
 import { HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from '../share/material/material.module';
 import { AddedPartsToCartEventService } from '../share/services/added-parts-to-cart-event.service';
-import { CartButtonModule } from '../share/cart-button/cart-button.module';
+import { AuthDialogModule } from '../share/auth-dialog/auth-dialog.module';
 
 
 @NgModule({
@@ -18,8 +18,8 @@ import { CartButtonModule } from '../share/cart-button/cart-button.module';
     MatTabsModule,
     HttpClientModule,
     MaterialModule,
-    CartButtonModule,
-    RouterLink
+    RouterLink,
+    AuthDialogModule
   ],
   exports: [MainComponent],
   providers: [AddedPartsToCartEventService]

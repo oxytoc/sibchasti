@@ -56,6 +56,11 @@ export class ApiService {
     return this.http.post<any>(path, user);
   }
 
+  getUserById(userId: string): Observable<User> {
+    const path = this.baseUrl + '/users/findOne';
+    return this.http.post<any>(path, { id: userId });
+  }
+
   deleteUsers(clients: User[]): Observable<any> {
     const path = this.baseUrl + '/users/delete';
     const partIds = clients.map(client => client.id)
@@ -78,18 +83,29 @@ export class ApiService {
     );
   }
 
-  createPopularParts(timeFrom: Date, timeTill: Date): Observable<any>{
-    const times = {
-      dateFrom: timeFrom.toISOString(),
-      dateTill: timeTill.toISOString()
-    }
-    const path = this.baseUrl + '/popularParts';
-    return this.http.post<PredictParts>(path, times);
+  makePredictForecast(period: number): Observable<any>{
+    const path = this.baseUrl + '/forecast/predictForecast';
+    return this.http.post(path, period);
   }
 
-  getPopularParts(): Observable<PredictParts[]>{
-    const path = this.baseUrl + '/popularParts';
+  retrainForecast(): Observable<any>{
+    const path = this.baseUrl + '/forecast/retrain';
+    return this.http.post(path, {});
+  }
+
+  getForecastDemands(): Observable<PredictParts[]>{
+    const path = this.baseUrl + '/forecast';
     return this.http.get<PredictParts[]>(path);
+  }
+
+  getPersonalOffers(userId: number): Observable<Part[]> {
+    const path = this.baseUrl + '/personalOffers/getOffers';
+    return this.http.post<Part[]>(path, { userId });
+  }
+
+  retrainPersonalOffers(): Observable<any> {
+    const path = this.baseUrl + '/personalOffers/retrainOffers';
+    return this.http.post<any>(path, {});
   }
 
   createOrder(order: Order): Observable<any> {
@@ -101,5 +117,10 @@ export class ApiService {
     const path = this.baseUrl + '/orders/delete';
     const partIds = orders.map(order => order.id)
     return this.http.post<any>(path, partIds);
+  }
+
+  getRecommendsByPartName(partName: string): Observable<Part[]> {
+    const path = this.baseUrl + '/personalOffers';
+    return this.http.post<Part[]>(path, { items: [partName] });
   }
 }

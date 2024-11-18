@@ -5,9 +5,44 @@
   </div>
 
   <div class="header-action">
-    <app-cart-button></app-cart-button>
+    <div *ngIf="userInfo$ | async as user" routerLink="/admin">
+      <ng-container *ngIf="user?.role === 'admin'">
+        <a class="action-text">
+          <mat-icon>settings</mat-icon>
+          <span>Администрирование</span>
+        </a>
+      </ng-container>
+    </div>
 
-    <h2 class="action-text">Daniil</h2>
+    <div class="action" *ngIf="userInfo$ | async as user">
+      <a class="action-text" (click)="clickToLogin()">
+        <mat-icon>account_box</mat-icon>
+        <span>{{user.username}}</span>
+      </a>
+    </div>
+
+    <div class="action" *ngIf="userInfo$ | async as user" routerLink="/cart">
+      <a class="action-text">
+        <mat-icon>shopping_basket</mat-icon>
+        <span>Корзина</span>
+      </a>
+    </div>
+
+    <div class="action" *ngIf="(userInfo$ | async) === null; else exitApp">
+      <a class="action-text" (click)="clickToLogin()">
+        <mat-icon>account_box</mat-icon>
+        <span>Войти</span>
+      </a>
+    </div>
+
+    <ng-template #exitApp>
+      <div class="action">
+        <a class="action-text" (click)="logout()">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>Выйти</span>
+        </a>
+      </div>
+    </ng-template>
   </div>
 </header>
 

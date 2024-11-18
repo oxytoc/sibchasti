@@ -22,10 +22,20 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    gap: 20px;
 
     .action-text {
       margin: 0;
-      color: #5856D6
+      color: #5856D6;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+
+      &:hover {
+        color: rgb(61, 59, 211);
+      }
     }
   }
 
@@ -33,6 +43,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    cursor: pointer;
 
     .logo-text {
       margin: 0;
