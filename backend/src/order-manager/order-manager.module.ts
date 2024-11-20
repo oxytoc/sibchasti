@@ -6,10 +6,14 @@ import { Order } from './entity/order.entity';
 import { Part } from 'src/parts-manager/entity/part.entity';
 import { PartQuantity } from './entity/part-quantity.entity';
 import { User } from 'src/user/entities/user.entity';
+import { AuthModule } from 'src/auth/auth.module';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Order, User, Part, PartQuantity])
+    TypeOrmModule.forFeature([Order, User, Part, PartQuantity]),
+    AuthModule,
+    UserModule
   ],
   controllers: [OrderManagerController],
   providers: [OrderManagerService],

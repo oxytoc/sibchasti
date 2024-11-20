@@ -1,5 +1,5 @@
-import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { combineLatest, from, map, Observable, of, switchMap } from 'rxjs';
+import { ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { catchError, combineLatest, from, map, Observable, of, switchMap, tap } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
@@ -131,13 +131,16 @@ export class AuthService {
       {
         secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
       }
-    )).pipe(map((tokens: TokensInterface) => ({
-      userId: tokens.sub,
-      username: tokens.username,
-      tokens: {
-        accessToken,
-        refreshToken: null, // Refresh token is not provided in the access token
-      }
-    })))
+    )).pipe(
+        catchError(error => { throw new NotFoundException(`Token not found, error - ${error}`); }),
+        map((tokens: TokensInterface) => ({
+        userId: tokens.sub,
+        username: tokens.username,
+        tokens: {
+          accessToken,
+          refreshToken: null, // Refresh token is not provided in the access token
+        }
+      }))
+    )
   }
 }

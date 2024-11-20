@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 import { PartQuantity } from "./part-quantity.entity";
 import { User } from "src/user/entities/user.entity";
@@ -20,6 +20,7 @@ export class Order {
     orderDate: string;
 
   @ManyToOne(() => User, (client: User) => client.orders, { eager: true })
+  @JoinColumn({ name: 'user_id' })
     client: User;
 
   @JoinTable()

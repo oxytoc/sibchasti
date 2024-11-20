@@ -35,5 +35,6 @@ import { AccessTokenStrategyService } from './strategy/access-token.strategy.ser
     }),
     TypeOrmModule.forFeature([User]),
   ],
+  exports: [AuthService],
 })
 export class AuthModule {}
