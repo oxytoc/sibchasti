@@ -7,7 +7,9 @@ import { CreatePartDto } from './dto/create-part.dto';
 import { PartsManagerService } from './parts-manager.service';
 import { Part } from './entity/part.entity';
 import { FindPartsDto } from './dto/find-part.dto';
-import { Public } from 'src/auth/public-stragegy';
+import { Private, Public } from 'src/auth/public-stragegy';
+import { Role } from 'src/roles/role.enum';
+import { Roles } from 'src/roles/roles.decorator';
 
 
 @Controller('')
@@ -20,7 +22,8 @@ export class PartsManagerController {
     return this.partsManager.findMany(query);
   }
 
-  @Public()
+  @Private()
+  @Roles(Role.Admin)
   @UseInterceptors(FileInterceptor('partImage'))
   @Post()
   create(
@@ -40,9 +43,17 @@ export class PartsManagerController {
     return this.partsManager.createPart(createPartDto, file);
   }
 
+  @Private()
+  @Roles(Role.Admin)
   @Post('/delete')
   delete(@Body() partIds: number[]) {
     this.partsManager.deleteParts(partIds);
     return;
+  }
+
+  @Public()
+  @Post('/getById')
+  findParts(@Body() idsDto: { id: number[] }) {
+    return this.partsManager.findParts(idsDto.id);
   }
 }

@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { Brackets, FindOptionsWhere, In, Repository } from 'typeorm';
+import { Brackets, In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { catchError, from, map, Observable, switchMap } from 'rxjs';
 
@@ -71,7 +71,7 @@ export class PartsManagerService {
 
   findParts(ids: number[]): Observable<Part[]> {
     return from(this.partRepository.find({ where: { id: In(ids) } })).pipe(
-      catchError(error => { throw new NotFoundException(`Parts not found`); }),
+      catchError(error => { throw new NotFoundException(`Parts not found, error - ${error}`); }),
       map(part => {
         if (!part) {
           throw new NotFoundException(`Part not found`);
@@ -84,16 +84,6 @@ export class PartsManagerService {
 
   findMany(dto: FindPartsDto): Observable<Part[]> {
     const { name, brand, carModel, quantity, article, vin, type, price, search } = dto;
-    const conditions: FindOptionsWhere<Part> | FindOptionsWhere<Part>[] = {
-      ...(name ? { name } : {}),
-      ...(brand? { brand } : {}),
-      ...(carModel? { carModel } : {}),
-      ...(quantity? { quantity } : {}),
-      ...(article? { article } : {}),
-      ...(vin? { vin } : {}),
-      ...(type? { type } : {}),
-      ...(price? { price } : {}),
-    };
 
     const queryBuilder = this.partRepository.createQueryBuilder('part');
     name && queryBuilder.andWhere('part.name = :name', { name });
