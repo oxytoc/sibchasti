@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { catchError, combineLatest, from, map, Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, combineLatest, from, map, Observable, of, switchMap } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
@@ -37,7 +37,6 @@ export class AuthService {
         if (user?.password !== pass) {
           throw new UnauthorizedException('Password is incorrect');
         }
-        const payload = { sub: user.id, username: user.username };
         const tokens = this.getTokens(user.id.toString(), user.username);
         return combineLatest([tokens, of(user)]);
       }),
@@ -69,7 +68,7 @@ export class AuthService {
           tokens
         };
       })
-    )
+    );
   }
 
   refreshTokens(refreshToken: string): Observable<TokensAndUser> {
@@ -80,7 +79,7 @@ export class AuthService {
         if (!token) {
           throw new ForbiddenException('Access Denied');
         }
-        return this.usersService.findUser(token.username)
+        return this.usersService.findUser(token.username);
       }),
       switchMap(user => {
         if (!user) {
@@ -95,7 +94,7 @@ export class AuthService {
           }))
         );
       }),
-    )
+    );
   }
   
 
@@ -110,19 +109,19 @@ export class AuthService {
         expiresIn: '1d',
       },
     ))
-    .pipe(switchMap((accessToken => {
-      return from(this.jwtService.signAsync(
-        {
-          sub: userId,
-          username,
-        },
-        {
-          secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
-          expiresIn: '7d',
-        },
-      ))
-      .pipe(map(refreshToken => ({accessToken, refreshToken})))
-    })));
+      .pipe(switchMap((accessToken => {
+        return from(this.jwtService.signAsync(
+          {
+            sub: userId,
+            username,
+          },
+          {
+            secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+            expiresIn: '7d',
+          },
+        ))
+          .pipe(map(refreshToken => ({accessToken, refreshToken})));
+      })));
   }
 
   verifyToken(accessToken: string): Observable<TokensAndUser> {
@@ -132,8 +131,8 @@ export class AuthService {
         secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
       }
     )).pipe(
-        catchError(error => { throw new NotFoundException(`Token not found, error - ${error}`); }),
-        map((tokens: TokensInterface) => ({
+      catchError(error => { throw new NotFoundException(`Token not found, error - ${error}`); }),
+      map((tokens: TokensInterface) => ({
         userId: tokens.sub,
         username: tokens.username,
         tokens: {
@@ -141,6 +140,6 @@ export class AuthService {
           refreshToken: null, // Refresh token is not provided in the access token
         }
       }))
-    )
+    );
   }
 }

@@ -49,13 +49,13 @@ export class OrderManagerController {
   makeUserOrder(
     @Body() makeOrderDto: MakeUserOrderDto,
     @Req() request: Request) {
-      return this.orderManager.makeUserOrder(makeOrderDto, extractTokenFromHeader(request));
+    return this.orderManager.makeUserOrder(makeOrderDto, extractTokenFromHeader(request));
   }
 
   @Get('/getUserOrders')
   @Public()
   getUserOrders(
     @Req() request: Request) {
-      return this.orderManager.getUserOrders(extractTokenFromHeader(request));
+    return this.orderManager.getUserOrders(extractTokenFromHeader(request));
   }
 }

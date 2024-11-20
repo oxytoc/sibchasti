@@ -1,6 +1,6 @@
 import { Body, Controller, Get, ParseFilePipeBuilder, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Express, query } from 'express';
+import { Express } from 'express';
 import { Observable } from 'rxjs';
 
 import { CreatePartDto } from './dto/create-part.dto';
@@ -38,7 +38,7 @@ export class PartsManagerController {
         })
         .build(),
     )
-    file?: Express.Multer.File,
+      file?: Express.Multer.File,
   ): Observable<Part> {
     return this.partsManager.createPart(createPartDto, file);
   }

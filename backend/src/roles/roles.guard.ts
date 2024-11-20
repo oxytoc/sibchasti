@@ -40,9 +40,9 @@ export class RolesGuard implements CanActivate {
       }
     )).pipe(
       switchMap((userTokens: TokensInterface) => {
-        return this.userService.viewUser(Number(userTokens.sub))
+        return this.userService.viewUser(Number(userTokens.sub));
       }),
       map((user) => requiredRoles.some((role) => user?.role === role)),
-    )
+    );
   }
 }

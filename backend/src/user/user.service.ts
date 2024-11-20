@@ -36,12 +36,12 @@ export class UserService {
   }
 
   findUser(username: string): Observable<User> {
-    return from(this.userRepository.findOneBy({ username }))
+    return from(this.userRepository.findOneBy({ username }));
   }
 
   updateUser(id: number, updateUserDto: UpdateUserDto): Observable<User> {
-    let user: User = new User();
-    Object.keys(updateUserDto).forEach(key => user[key] = updateUserDto[key])
+    const user: User = new User();
+    Object.keys(updateUserDto).forEach(key => user[key] = updateUserDto[key]);
     user.id = id;
     return from(this.userRepository.save(user));
   }

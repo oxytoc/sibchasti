@@ -19,7 +19,7 @@
     "noFallthroughCasesInSwitch": false
   },
   "include": [
-    "../.eslintrc",
+    "./.eslintrc",
     "./src/**/*"
   ]
 }

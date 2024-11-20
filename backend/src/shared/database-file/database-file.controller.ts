@@ -29,10 +29,10 @@ export class DatabaseFileController {
         response.set({
           'Content-Disposition': `inline; filename="${file.filename}"`,
           'Content-Type': 'image'
-        })
+        });
      
         return new StreamableFile(stream);
       })
-    )
+    );
   }
 }

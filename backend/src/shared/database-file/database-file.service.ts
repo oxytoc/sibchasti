@@ -17,7 +17,7 @@ export class DatabaseFilesService {
     const newFile = this.databaseFilesRepository.create({
       filename,
       data: dataBuffer
-    })
+    });
     return from(this.databaseFilesRepository.save(newFile));
   }
 
@@ -27,19 +27,19 @@ export class DatabaseFilesService {
       filename,
       data: dataBuffer
     })).pipe(
-      catchError(error => { throw new NotFoundException(`File ${fileId} not found`); }),
+      catchError(() => { throw new NotFoundException(`File ${fileId} not found`); }),
       switchMap(file => {
         if (!file) {
           throw new NotFoundException();
         }
-        return from(this.databaseFilesRepository.save(file))
+        return from(this.databaseFilesRepository.save(file));
       })
     );
   }
  
   getFileById(fileId: number): Observable<DatabaseFile> {
     return from(this.databaseFilesRepository.findOne({ where: { id: fileId } })).pipe(
-      catchError(error => { throw new NotFoundException(`File ${fileId} not found`); }),
+      catchError(() => { throw new NotFoundException(`File ${fileId} not found`); }),
       tap(file => {
         if (!file) {
           throw new NotFoundException();

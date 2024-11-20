@@ -57,7 +57,7 @@ export class OrderManagerService {
 
   private findOrders(ids: number[]): Observable<ActualUserOrder[]> {
     return from(this.orderRepository.find({ where: { id: In(ids) } })).pipe(
-      catchError(error => { throw new NotFoundException(`Order not found`); }),
+      catchError(() => { throw new NotFoundException(`Order not found`); }),
       map(orders => {
         if (!orders.length) {
           throw new NotFoundException(`Orders not found`);
@@ -79,7 +79,7 @@ export class OrderManagerService {
 
   private findOrdersByClient(client: User): Observable<ActualUserOrder[]> {
     return from(this.orderRepository.find({ where: { client: client } })).pipe(
-      catchError(error => { throw new NotFoundException(`Order not found`); }),
+      catchError(() => { throw new NotFoundException(`Order not found`); }),
       map(orders => {
         if (!orders.length) {
           throw new NotFoundException(`Orders not found`);
@@ -112,11 +112,11 @@ export class OrderManagerService {
                 });
                 return from(this.orderRepository.save(order)).pipe(
                   map(orders => this.makeOrdersToActualOrders([orders])[0])
-                )
+                );
               })
-            )
+            );
           })
-        )
+        );
       })
     );
   }
@@ -130,11 +130,11 @@ export class OrderManagerService {
   closeOrder(closeOrderDto: CloseOrderDto): Observable<ActualUserOrder> {
     return this.findOrders([Number(closeOrderDto.orderId)]).pipe(
       switchMap(order => {
-      return from(this.orderRepository.preload({
-        orderStatus: OrderStatus.closed,
-        ...order[0],
-      })).pipe(map(order => this.makeOrdersToActualOrders([order])[0]))
-    }))
+        return from(this.orderRepository.preload({
+          orderStatus: OrderStatus.closed,
+          ...order[0],
+        })).pipe(map(order => this.makeOrdersToActualOrders([order])[0]));
+      }));
   }
 
   getAllOrders(): Promise<Order[]> {
@@ -142,7 +142,7 @@ export class OrderManagerService {
   }
 
   makeUserOrder(makeOrderDto: MakeUserOrderDto, token: string): Observable<ActualUserOrder> {
-    if (!token) { return(of(null)) };
+    if (!token) { return(of(null)); }
 
     return this.authService.verifyToken(token).pipe(
       catchError(error => { throw new NotFoundException(`User not found, error - ${error}`); }),
@@ -151,14 +151,14 @@ export class OrderManagerService {
           clientId: tokensAndUser.userId,
           partQuantity: makeOrderDto.partQuantity,
           orderStatus: makeOrderDto.orderStatus
-        }
+        };
         return this.createOrder(order);
       })
-    )
+    );
   }
 
   getUserOrders(token: string): Observable<ActualUserOrder[]> {
-    if (!token) { return(of(null)) };
+    if (!token) { return(of(null)); }
 
     return this.authService.verifyToken(token).pipe(
       catchError(error => { throw new NotFoundException(`User not found, error - ${error}`); }),
@@ -166,6 +166,6 @@ export class OrderManagerService {
         return this.userService.viewUser(Number(tokensAndUser.userId));
       }),
       switchMap(user => this.findOrdersByClient(user))
-    )
+    );
   }
 }

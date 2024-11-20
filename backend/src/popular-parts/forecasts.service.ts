@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { HttpService } from '@nestjs/axios';
+import { catchError, from, map, Observable, switchMap } from 'rxjs';
 import { Repository } from 'typeorm';
 
 import { Forecast } from './entity/forecast.entity';
-import { HttpService } from '@nestjs/axios';
-import { catchError, from, map, Observable, switchMap, tap } from 'rxjs';
 
 export interface PartIdWithDemands {
   partId: number;
@@ -23,18 +23,16 @@ export class ForecastsService {
   }
 
   getPredictForecast(period: number): Observable<any> {
-    console.log(period)
     const url = `${process.env.ML_SERVICE_URL}/forecaste`;
 
     return this.httpService.post<Record<string, string[]>>(url, { period: period }).pipe(
-      tap((forecastResponse) => console.log(forecastResponse.data)),
       // actual return data: { '2': [ 6, 6 ] } for period: 2
       map((forecastResponse) => forecastResponse.data),
       switchMap(forecast => {
         const partIdWithForecast: PartIdWithDemands[] = Object.keys(forecast).map(key => ({
           partId: parseInt(key),
           demands: forecast[key]
-        }))
+        }));
         const forecastCreate = this.forecastRepository.create({ forecast: partIdWithForecast, period: period});
         return from(this.forecastRepository.save(forecastCreate)).pipe(
           catchError(err => {
@@ -45,11 +43,11 @@ export class ForecastsService {
               cause: err
             });
           })
-        )
+        );
       }),
       catchError((error) => {
         throw new Error(`Failed to get recommendations: ${error}`);
-      }))
+      }));
   }
 
   retrain(): Observable<string> {
@@ -60,6 +58,6 @@ export class ForecastsService {
       catchError((error) => {
         throw new Error(`Failed to retrain: ${error}`);
       })
-    )
+    );
   }
 }

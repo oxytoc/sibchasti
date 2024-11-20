@@ -7,7 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from './public-stragegy';
-import { catchError, from, map, Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, from, map, Observable, of } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
 import { extractTokenFromHeader } from 'src/shared/extract-tokens-from-header';
 
@@ -44,13 +44,13 @@ export class AccessTokenGuard implements CanActivate {
         secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
       }
     )).pipe(
-      map((payload: TokensInterface) => {
+      map(() => {
         return true;
       }),
       catchError((error) => {
         console.log(error);
         throw new UnauthorizedException(error);
       })
-    )
+    );
   } 
 }

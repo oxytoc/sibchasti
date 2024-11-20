@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { catchError, map, Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, map, Observable, switchMap } from 'rxjs';
 
 import { Part } from 'src/parts-manager/entity/part.entity';
 import { PartsManagerService } from 'src/parts-manager/parts-manager.service';
@@ -19,17 +19,16 @@ export class PersonalOffersService {
     const url = `${process.env.ML_SERVICE_URL}/recommend-offers`;
     return this.userService.viewUser(userId).pipe(
       switchMap(user => {
-      if (!user) {
-        throw new NotFoundException(`User with ${userId} does not exist`);
-      }
-      return this.httpService.post<{ recommendations: Part[] }>(url, { user_id: user.id }).pipe(
-        tap((forecastResponse) => console.log(forecastResponse)),
-        switchMap(recomParts => this.partService.findParts(recomParts.data.recommendations.map(part => part.id))),
-        catchError((error) => {
-          throw new Error(`Failed to get recommendations: ${error}`);
-        })
-      )
-    }))
+        if (!user) {
+          throw new NotFoundException(`User with ${userId} does not exist`);
+        }
+        return this.httpService.post<{ recommendations: Part[] }>(url, { user_id: user.id }).pipe(
+          switchMap(recomParts => this.partService.findParts(recomParts.data.recommendations.map(part => part.id))),
+          catchError((error) => {
+            throw new Error(`Failed to get recommendations: ${error}`);
+          })
+        );
+      }));
   }
 
   retrain(): Observable<string> {
@@ -40,6 +39,6 @@ export class PersonalOffersService {
       catchError((error) => {
         throw new Error(`Failed to retrain: ${error}`);
       })
-    )
+    );
   }
 }

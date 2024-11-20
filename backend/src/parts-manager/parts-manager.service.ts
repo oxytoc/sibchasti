@@ -33,7 +33,7 @@ export class PartsManagerService {
                 cause: err
               });
             })
-          )
+          );
       })
     );
   }
@@ -48,7 +48,7 @@ export class PartsManagerService {
             partImageId: file.id,
             ...partDto,
           })).pipe(
-            catchError(error => { throw new NotFoundException(`Part ${id} not found`); }),
+            catchError(() => { throw new NotFoundException(`Part ${id} not found`); }),
             switchMap(part => from(this.partRepository.save(part)))
           );
         })
@@ -58,7 +58,7 @@ export class PartsManagerService {
       id: +id,
       ...partDto,
     })).pipe(
-      catchError(error => { throw new NotFoundException(`Part ${id} not found`); }),
+      catchError(() => { throw new NotFoundException(`Part ${id} not found`); }),
       switchMap(part => from(this.partRepository.save(part)))
     );
   }
@@ -105,11 +105,11 @@ export class PartsManagerService {
         qb.orWhere('LOWER(part.quantity) LIKE LOWE(:search)', { search: `%${search}%` });
         qb.orWhere('LOWER(part.type) LIKE LOWE(:search)', { search: `%${search}%` });
         qb.orWhere('LOWER(part.price) LIKE LOWE(:search)', { search: `%${search}%` });
-      }))
+      }));
     }
 
     return from(queryBuilder.getMany()).pipe(
-      catchError(error => { throw new NotFoundException(`Parts not found`); }),
+      catchError(() => { throw new NotFoundException(`Parts not found`); }),
       map(parts => {
         if (!parts.length) {
           throw new NotFoundException(`Parts not found`);
