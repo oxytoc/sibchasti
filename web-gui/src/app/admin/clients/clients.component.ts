@@ -95,6 +95,10 @@ export class ClientsComponent implements AfterViewInit, OnDestroy {
     });
   }
 
+  retrainPredictForecast(): void {
+    this.sub.add(this.service.retrainPersonalOffers().subscribe());
+  }
+
   ngOnDestroy(): void {
     this.sub.unsubscribe();
   }
