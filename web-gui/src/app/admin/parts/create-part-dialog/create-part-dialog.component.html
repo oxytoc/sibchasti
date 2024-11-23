@@ -9,6 +9,11 @@
       </mat-form-field>
 
       <mat-form-field>
+        <mat-label>Описание</mat-label>
+        <input matInput formControlName="description">
+      </mat-form-field>
+
+      <mat-form-field>
         <mat-label>Вин</mat-label>
         <input matInput formControlName="vin">
       </mat-form-field>
@@ -49,6 +54,21 @@
         <mat-label>Колличество</mat-label>
         <input matInput formControlName="quantity" type="number">
       </mat-form-field>
+
+      <div>
+        <input type="file" class="file-input"
+       (change)="onFileSelected($event)" #fileUpload>
+
+        <div class="file-upload">
+
+          {{fileName || "Файл не выбран"}}
+
+            <button mat-mini-fab color="primary" class="upload-btn"
+              (click)="fileUpload.click()">
+                <mat-icon>attach_file</mat-icon>
+            </button>
+        </div>
+      </div>
     </div>
   </form>
 </mat-dialog-content>

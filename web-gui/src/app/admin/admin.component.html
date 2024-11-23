@@ -1,30 +1,32 @@
-<nav mat-tab-nav-bar [tabPanel]="tabPanel">
-  <a  mat-tab-link
-      routerLink="/admin/parts"
-      routerLinkActive #rlaParts="routerLinkActive"
-      [active]="rlaParts.isActive">
-    Запчасти
+<div class="admin">
+  <nav mat-tab-nav-bar [tabPanel]="tabPanel">
+    <a  mat-tab-link
+        routerLink="/admin/parts"
+        routerLinkActive #rlaParts="routerLinkActive"
+        [active]="rlaParts.isActive">
+      Запчасти
+    </a>
+    <a  mat-tab-link
+        routerLink="/admin/clients"
+        routerLinkActive #rlaClients="routerLinkActive"
+        [active]="rlaClients.isActive">
+      Пользователи
+    </a>
+    <a  mat-tab-link
+        routerLink="/admin/orders"
+        routerLinkActive #rlaOrders="routerLinkActive"
+        [active]="rlaOrders.isActive">
+      Заказы
+    </a>
+    <a  mat-tab-link
+      routerLink="/admin/popular-parts"
+      routerLinkActive #rlaPopParts="routerLinkActive"
+      [active]="rlaPopParts.isActive">
+    Популярные запчасти
   </a>
-  <a  mat-tab-link
-      routerLink="/admin/clients"
-      routerLinkActive #rlaClients="routerLinkActive"
-      [active]="rlaClients.isActive">
-    Пользователи
-  </a>
-  <a  mat-tab-link
-      routerLink="/admin/orders"
-      routerLinkActive #rlaOrders="routerLinkActive"
-      [active]="rlaOrders.isActive">
-    Заказы
-  </a>
-  <a  mat-tab-link
-    routerLink="/admin/popular-parts"
-    routerLinkActive #rlaPopParts="routerLinkActive"
-    [active]="rlaPopParts.isActive">
-  Популярные запчасти
-</a>
-</nav>
+  </nav>
 
-<mat-tab-nav-panel #tabPanel>
-  <router-outlet></router-outlet>
-</mat-tab-nav-panel>
+  <mat-tab-nav-panel #tabPanel>
+    <router-outlet></router-outlet>
+  </mat-tab-nav-panel>
+</div>

@@ -16,6 +16,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 
 import { AnalyzePartsComponent } from './analyze-parts.component';
+import { ForecastPipe } from '../../common/forecast.pipe';
 
 const routes: Routes = [{ path: '', component: AnalyzePartsComponent }];
 
@@ -40,6 +41,7 @@ const routes: Routes = [{ path: '', component: AnalyzePartsComponent }];
     ReactiveFormsModule,
     FormsModule,
     MatDatepickerModule,
+    ForecastPipe
   ]
 })
 export class AnalyzePartsModule { }

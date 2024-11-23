@@ -9,5 +9,8 @@ import { Router } from '@angular/router';
 export class AdminComponent {
   constructor (
     private router: Router
-  ) { router.navigate(['admin/parts']) }
+  ) {
+    console.log('trie');
+    // router.navigate(['admin/parts'])
+  }
 }

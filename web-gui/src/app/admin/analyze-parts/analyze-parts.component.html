@@ -30,13 +30,13 @@
     </ng-container>
 
     <ng-container matColumnDef="period">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Период </th>
-      <td mat-cell *matCellDef="let element"> {{element.timeSeries}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Период, м </th>
+      <td mat-cell *matCellDef="let element"> {{element.period}} </td>
     </ng-container>
   
     <ng-container matColumnDef="forecast">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Прогнозирование спроса </th>
-      <td mat-cell *matCellDef="let element"> {{element.forecast}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.forecast | forecast}} </td>
     </ng-container>
   
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

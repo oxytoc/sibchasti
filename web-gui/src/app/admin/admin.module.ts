@@ -9,6 +9,7 @@ import { AdminGuard } from '../share/guards/admin.guard';
 
 
 const AUTH_ROUTES = [
+  { path: '', redirectTo: 'parts', pathMatch: 'full' as any },
   { path: 'parts', loadChildren: () => import('./parts/parts.module').then(m => m.AdminPartsModule) },
   { path: 'clients', loadChildren: () => import('./clients/clients.module').then(m => m.ClientsModule) },
   { path: 'orders', loadChildren: () => import('./orders/orders.module').then(m => m.OrdersModule) },
