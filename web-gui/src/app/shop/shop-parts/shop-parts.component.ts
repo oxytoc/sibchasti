@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, Observable, switchMap, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, switchMap, Subscription, of, onErrorResumeNextWith } from 'rxjs';
 
 import { Part } from '../../interfaces';
 import { ApiService } from '../../services/api.service';
@@ -11,8 +11,11 @@ import { ApiService } from '../../services/api.service';
   styleUrl: './shop-parts.component.scss'
 })
 export class ShopPartsComponent implements OnInit, OnDestroy {
-  private _updateParts = new BehaviorSubject<Record<string, any>>({});
-  parts$: Observable<Part[]> = this._updateParts.pipe(switchMap(params => this.service.getParts(params)));
+  private _updateParts = new BehaviorSubject<any>({});
+  parts$: Observable<Part[]> = this._updateParts.pipe(
+    switchMap(params => this.service.getParts(params)),
+    onErrorResumeNextWith(of([])),
+  );
 
   subscription: Subscription = new Subscription();
 
@@ -23,7 +26,6 @@ export class ShopPartsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscription.add(this.router.queryParams.subscribe(params => {
-      console.log(params);
       this._updateParts.next(params);
     }))
   }

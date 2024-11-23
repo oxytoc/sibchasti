@@ -1,5 +1,9 @@
+:host {
+  flex-grow: 2;
+}
+
 .cart {
-  min-height: calc(86% - 20px);
+  min-height: 96%;
   background: #fff;
   margin: 10px 0;
   padding: 10px 20px;
@@ -13,6 +17,16 @@
 
   .table-container {
     margin-bottom: 10px;
+
+    .action-part {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      button {
+        margin: 0;
+      }
+    }
 
     .table-img {
       width: 90px;

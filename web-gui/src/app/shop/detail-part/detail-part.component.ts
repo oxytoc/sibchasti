@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
 
 import { ApiService } from '../../services/api.service';
-import { ObjectInformation, Part, TranlatedKeyPart } from '../../interfaces';
+import { ObjectInformation, Part, PartQuantity, TranlatedKeyPart } from '../../interfaces';
 import { AddedPartsToCartEventService } from '../../share/services/added-parts-to-cart-event.service';
 
 @Component({
@@ -49,6 +49,10 @@ export class DetailPartComponent implements OnDestroy {
   }
 
   addPartToCart(): void {
-    this.addedPartsToCartEventService.addPartToCart(this.part);
+    const pq: PartQuantity = {
+      partId: this.part.id,
+      quantity: 1
+    }
+    this.addedPartsToCartEventService.addPartToCart(pq);
   }
 }

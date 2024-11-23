@@ -9,8 +9,8 @@ import { MaterialModule } from '../share/material/material.module';
 
 const SHOP_ROUTES: Routes = [
   { path: '', loadChildren: () => import('./shop-parts/shop-parts.module').then(m => m.ShopPartsModule) },
-  { path: 'cart', loadChildren: () => import('./cart/cart.module').then(m => m.CartModule) },
-  { path: 'part/:id', loadChildren: () => import('./detail-part/detail-part.module').then(m => m.DetailPartModule) },
+  // { path: 'cart', loadChildren: () => import('./cart/cart.module').then(m => m.CartModule) },
+  // { path: 'part/:id', loadChildren: () => import('./detail-part/detail-part.module').then(m => m.DetailPartModule) },
 ]
 
 export const routes: Routes = [

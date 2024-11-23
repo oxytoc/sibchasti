@@ -36,7 +36,17 @@
       
         <ng-container matColumnDef="quantity">
           <th mat-header-cell *matHeaderCellDef> Колличество </th>
-          <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+          <td mat-cell *matCellDef="let element">
+            <span class="action-part">
+              <button color="primary" mat-mini-fab (click)="decrementPart(element)">
+                <mat-icon>remove</mat-icon>
+              </button>
+              {{element.quantity}}
+              <button color="primary" mat-mini-fab (click)="incrementPart(element)">
+                <mat-icon>add</mat-icon>
+              </button>
+            </span>
+          </td>
         </ng-container>
       
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -63,5 +73,10 @@
         </button>
       </mat-card-footer>
     </mat-card>
+  </div>
+
+  <div class="part-container" *ngIf="(parts$ | async) as part">
+    <h2>Возможно, вам понравится</h2>
+    <app-parts [parts]="parts$ | async"></app-parts>
   </div>
 </div>

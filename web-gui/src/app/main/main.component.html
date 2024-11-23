@@ -4,48 +4,59 @@
     <h1 class="logo-text">СибЧасти</h1>
   </div>
 
-  <div class="header-action">
-    <div *ngIf="userInfo$ | async as user" routerLink="/admin">
-      <ng-container *ngIf="user?.role === 'admin'">
+  <ng-container *ngIf="userInfo$ | async as user; else exitApp">
+    <div class="header-action">
+      <div routerLink="/admin">
+        <ng-container *ngIf="user?.role === 'admin'">
+          <a class="action-text">
+            <mat-icon>settings</mat-icon>
+            <span>Администрирование</span>
+          </a>
+        </ng-container>
+      </div>
+
+      <div class="action" routerLink="/personal">
         <a class="action-text">
-          <mat-icon>settings</mat-icon>
-          <span>Администрирование</span>
+          <mat-icon>account_box</mat-icon>
+          <span>{{user.username}}</span>
         </a>
-      </ng-container>
-    </div>
+      </div>
 
-    <div class="action" *ngIf="userInfo$ | async as user">
-      <a class="action-text" (click)="clickToLogin()">
-        <mat-icon>account_box</mat-icon>
-        <span>{{user.username}}</span>
-      </a>
-    </div>
+      <div class="action" routerLink="/cart">
+        <a class="action-text">
+          <mat-icon>shopping_basket</mat-icon>
+          <span>Корзина</span>
+        </a>
+      </div>
 
-    <div class="action" *ngIf="userInfo$ | async as user" routerLink="/cart">
-      <a class="action-text">
-        <mat-icon>shopping_basket</mat-icon>
-        <span>Корзина</span>
-      </a>
-    </div>
-
-    <div class="action" *ngIf="(userInfo$ | async) === null; else exitApp">
-      <a class="action-text" (click)="clickToLogin()">
-        <mat-icon>account_box</mat-icon>
-        <span>Войти</span>
-      </a>
-    </div>
-
-    <ng-template #exitApp>
       <div class="action">
         <a class="action-text" (click)="logout()">
           <mat-icon>exit_to_app</mat-icon>
           <span>Выйти</span>
         </a>
       </div>
-    </ng-template>
-  </div>
+    </div>
+  </ng-container>
+  <ng-template #exitApp>
+    <div class="header-action action">
+      <a class="action-text" (click)="clickToLogin()">
+        <mat-icon>account_box</mat-icon>
+        <span>Войти</span>
+      </a>
+    </div>
+  </ng-template>
 </header>
 
 <div class="main-block">
   <router-outlet></router-outlet>
+
+  <footer class="footer">
+    <p>2024 SibChasti. Все права защищены.</p>
+    <a href="#">Политика конфиденциальности</a>
+    <a href="#">Связаться с нами</a>
+    <div class="logo">
+      <mat-icon class="icon">directions_car</mat-icon>
+      <h1 class="logo-text">СибЧасти</h1>
+    </div>
+  </footer>
 </div>

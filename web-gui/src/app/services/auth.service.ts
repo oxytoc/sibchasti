@@ -1,6 +1,6 @@
 import { AfterViewInit, Injectable } from '@angular/core';
 import { LoginInterface, SignUp, User } from '../interfaces';
-import { BehaviorSubject, catchError, Observable, of, Subject, Subscription, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, Subject, Subscription, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
@@ -15,7 +15,9 @@ export interface TokensAndUser {
   username: string;
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthService {
   private _isAuthenticated = new BehaviorSubject<boolean>(false);
   isAuthenticatedUser$ = this._isAuthenticated.asObservable();
@@ -35,8 +37,7 @@ export class AuthService {
   constructor(
     private router: Router,
     private http: HttpClient
-  ) { 
-  }
+  ) { }
   
   login(loginObject: LoginInterface): Observable<any> {
     const path = this.baseUrl + '/auth/login';
@@ -78,6 +79,10 @@ export class AuthService {
 
   getAuthorizationToken(): string {
     return localStorage.getItem(this.authSecretKey);
+  }
+
+  getUserId(): string {
+    return this._userId.value;
   }
 
   logout(): void {
@@ -131,6 +136,17 @@ export class AuthService {
         this._isAuthenticated.next(true);
       }))
     }
+  }
+
+  verifyTokenIfExists$(): Observable<boolean> {
+    const token = localStorage.getItem(this.authSecretKey);
+    if (!token) { return of(false); }
+    return this.verifyToken(token).pipe(map(tokens => {
+      this._userId.next(tokens.userId)
+      this._username.next(tokens.username)
+      this._isAuthenticated.next(true);
+      return true;
+    }))
   }
 
   unsubrcibe(): void {

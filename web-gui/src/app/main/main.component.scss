@@ -62,4 +62,39 @@
 .main-block {
   height: 100%;
   overflow: scroll;
+  display: flex;
+  flex-direction: column;
+}
+
+.footer {
+  min-height: 12vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px 20px;
+  background: #fff;
+
+  p {
+    margin: 0;
+  }
+
+  .logo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .logo-text {
+      margin: 0;
+      color: #5856D6
+    }
+  }
+
+  .icon {
+    width: 5vh;
+    height: 5vh;
+    font-size: 5vh;
+    color: #5856D6
+  }
 }

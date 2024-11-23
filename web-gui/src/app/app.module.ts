@@ -27,7 +27,6 @@ import { AuthService } from './services/auth.service';
     HttpClientModule,
   ],
   providers: [
-    AuthService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptorService,

@@ -51,11 +51,11 @@ export class ShopFiltersComponent implements AfterViewInit, OnDestroy {
   }
 
   resetParams(): void {
-    this.router.navigate(['.'], { relativeTo: this.route, queryParams: {}, queryParamsHandling: 'merge' });
+    this.router.navigate(['.'], { relativeTo: this.route, queryParams: {} });
   }
 
   private getModelsCar(carBrand: string): string[] {
-    if (!carBrand.length) {
+    if (!carBrand?.length) {
       return [];
     }
     return getModels(carBrand);

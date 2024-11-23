@@ -28,7 +28,9 @@ export class MainComponent implements AfterViewInit, OnDestroy {
   ) {}
 
   ngAfterViewInit(): void {
-    this.authService.verifyTokenIfExists();
+    if (!this.authService.isAuthenticatedUser()) {
+      this.authService.verifyTokenIfExists();
+    }
   }
 
   clickToLogin(): void {

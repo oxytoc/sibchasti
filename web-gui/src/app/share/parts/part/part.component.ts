@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { BehaviorSubject } from 'rxjs';
-import { Part } from '../../../interfaces';
+import { Part, PartQuantity } from '../../../interfaces';
 import { ApiService } from '../../../services/api.service';
 import { AddedPartsToCartEventService } from '../../services/added-parts-to-cart-event.service';
 
@@ -32,7 +32,11 @@ export class PartComponent {
   ) { }
 
   addPartToCart(): void {
-    this.cartService.addPartToCart(this.part);
+    const pq: PartQuantity = {
+      partId: this.part.id,
+      quantity: 1
+    }
+    this.cartService.addPartToCart(pq);
   }
 
   redirectToDetailPart(part: Part): void {

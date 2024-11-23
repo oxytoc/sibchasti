@@ -57,9 +57,14 @@ export enum OrderStatus {
 }
 
 export interface Order {
-  id: number;
-  orderDate: string;
+  id?: number;
+  orderDate?: string;
   clientId: number,
+  orderStatus: OrderStatus,
+  partQuantities: PartQuantity[];
+}
+
+export interface UserOrder {
   orderStatus: OrderStatus,
   partQuantities: PartQuantity[];
 }
@@ -100,7 +105,7 @@ export interface SignUp {
 }
 
 export interface DatabaseFile {
-  id: number;
+  id?: number;
   filename: string;
   data: Uint8Array;
 }
@@ -123,4 +128,9 @@ export interface FilterInterface {
 export interface FilterChanged {
   name: string;
   value: any;
+}
+
+export interface Forecast {
+  partId: number;
+  demands: number[];
 }

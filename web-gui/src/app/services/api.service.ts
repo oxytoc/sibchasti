@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 
-import { User, LoginInterface, Order, Part, PredictParts, OrderStatus } from '../interfaces';
+import { User, Order, Part, PredictParts, OrderStatus, UserOrder } from '../interfaces';
 
 interface ServerPartQuantity {
   id: number;
@@ -30,12 +30,18 @@ export class ApiService {
   baseUrl = 'http://localhost:3000/api';
 
   getParts(params?: Record<string, any>): Observable<Part[]> {
-    const path = this.baseUrl + '/parts';
     console.log(params);
+    const path = this.baseUrl + '/parts';
     return this.http.get<any>(path , { params });
   }
 
+  getPartByIds(ids: number[]): Observable<Part[]> {
+    const path = this.baseUrl + '/parts/getById';
+    return this.http.post<any>(path , { id: ids });
+  }
+
   createPart(part: Part): Observable<any> {
+    console.log(part);
     const path = this.baseUrl + '/parts';
     return this.http.post<any>(path, part);
   }
@@ -75,7 +81,7 @@ export class ApiService {
           so => ({
             ...so,
             orderDate: new Date(so.orderDate).toUTCString(),
-            clientId: so.client.id,
+            clientId:so.client.id,
             partQuantities: so.partQuantities.map(q => ({quantity: q.quantity, partId: q.part.id}))
           })
         )
@@ -85,11 +91,11 @@ export class ApiService {
 
   makePredictForecast(period: number): Observable<any>{
     const path = this.baseUrl + '/forecast/predictForecast';
-    return this.http.post(path, period);
+    return this.http.post(path, {period});
   }
 
   retrainForecast(): Observable<any>{
-    const path = this.baseUrl + '/forecast/retrain';
+    const path = this.baseUrl + '/forecast/retrainForecast';
     return this.http.post(path, {});
   }
 
@@ -111,6 +117,16 @@ export class ApiService {
   createOrder(order: Order): Observable<any> {
     const path = this.baseUrl + '/orders';
     return this.http.post<any>(path, order);
+  }
+
+  makeUserOrder(order: UserOrder): Observable<any> {
+    const path = this.baseUrl + '/orders/makeUserOrder';
+    return this.http.post<any>(path, order);
+  }
+
+  getUserOrders(): Observable<ServerOrder[]> {
+    const path = this.baseUrl + '/orders/getUserOrders';
+    return this.http.get<any>(path);
   }
 
   deleteOrders(orders: Order[]): Observable<any> {

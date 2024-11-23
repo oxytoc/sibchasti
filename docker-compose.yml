@@ -22,16 +22,35 @@ services:
       - db
     volumes:
       - ./backend/src:/app/backend/src
+    environment:
+      - ML_SERVICE_URL=http://ml-model:5000
 
-  # web-gui:
-  #   build:
-  #     context: ./web-gui
-  #     dockerfile: Dockerfile
-  #   container_name: web-gui
-  #   ports:
-  #     - '4200:4200'
-  #   volumes:
-  #     - ./web-gui/src:/app/web-gui/src
+  web-gui:
+    build:
+      context: ./web-gui
+      dockerfile: Dockerfile
+    container_name: web-gui
+    ports:
+      - '4200:4200'
+    volumes:
+      - ./web-gui/src:/app/web-gui/src
+
+  ml-model:
+    build:
+      context: ./machine-learnings
+      dockerfile: Dockerfile
+    volumes:
+      - ./machine-learnings/model:/app/model
+    depends_on:
+      - db
+      - app
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_HOST=db
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
 
   pgadmin:
     image: dpage/pgadmin4
