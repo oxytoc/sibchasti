@@ -31,7 +31,7 @@ def load_data_from_db():
         JOIN "order_part_quantities_part_quantity" opq ON o.id = opq."orderId"
         JOIN "part_quantity" pq ON opq."partQuantityId" = pq.id
         JOIN "part" p ON pq."partId" = p.id
-        JOIN "user" u ON o."clientId" = u.id
+        JOIN "user" u ON o."user_id" = u.id
         WHERE o."orderStatus" = 'closed';
     """
     part_df = pd.read_sql_query(part_query, connection)
