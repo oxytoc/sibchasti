@@ -1,4 +1,5 @@
 export interface FindPartsDto {
+  id?: string;
   name?: string;
   brand?: string;
   carModel?: string;
@@ -7,6 +8,5 @@ export interface FindPartsDto {
   vin?: string;
   type?: string;
   price?: number;
-
   search?: string;
 }

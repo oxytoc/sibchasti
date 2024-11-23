@@ -83,7 +83,7 @@ export class PartsManagerService {
   }
 
   findMany(dto: FindPartsDto): Observable<Part[]> {
-    const { name, brand, carModel, quantity, article, vin, type, price, search } = dto;
+    const { name, brand, carModel, quantity, article, vin, type, price, search, id } = dto;
 
     const queryBuilder = this.partRepository.createQueryBuilder('part');
     name && queryBuilder.andWhere('part.name = :name', { name });
@@ -94,6 +94,7 @@ export class PartsManagerService {
     vin && queryBuilder.andWhere('part.vin = :vin', { vin });
     type && queryBuilder.andWhere('part.type = :type', { type });
     price && queryBuilder.andWhere('part.price = :price', { price });
+    id && queryBuilder.andWhere('part.id = :id', { id });
 
     if (search) {
       queryBuilder.andWhere(new Brackets(qb => {
@@ -105,16 +106,13 @@ export class PartsManagerService {
         qb.orWhere('LOWER(part.quantity) LIKE LOWE(:search)', { search: `%${search}%` });
         qb.orWhere('LOWER(part.type) LIKE LOWE(:search)', { search: `%${search}%` });
         qb.orWhere('LOWER(part.price) LIKE LOWE(:search)', { search: `%${search}%` });
+        qb.orWhere('LOWER(part.id) LIKE LOWE(:search)', { search: `%${search}%` });
       }));
     }
 
     return from(queryBuilder.getMany()).pipe(
       catchError(() => { throw new NotFoundException(`Parts not found`); }),
       map(parts => {
-        if (!parts.length) {
-          throw new NotFoundException(`Parts not found`);
-        }
-    
         return parts;
       })
     );
