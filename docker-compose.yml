@@ -31,9 +31,7 @@ services:
       dockerfile: Dockerfile
     container_name: web-gui
     ports:
-      - '4200:4200'
-    volumes:
-      - ./web-gui/src:/app/web-gui/src
+      - '80:80'
 
   ml-model:
     build:

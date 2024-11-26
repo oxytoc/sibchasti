@@ -1,16 +1,12 @@
 #STAGE 1
-FROM node:20
-
+FROM node:20 as build
 WORKDIR /app/web-gui
-
-COPY package*.json ./
-
+COPY package.json package-lock.json ./
 RUN npm install
-
-EXPOSE 4200
-
 COPY . .
-
 RUN npm run build
 
-CMD [ "npm", "run", "start" ]
+#STAGE 2
+FROM nginx:alpine
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY --from=build /app/web-gui/dist/web-gui/browser /usr/share/nginx/html
