@@ -75,8 +75,8 @@
     </mat-card>
   </div>
 
-  <div class="part-container" *ngIf="(parts$ | async) as part">
+  <div class="part-container" *ngIf="(parts$ | async) as parts">
     <h2>Возможно, вам понравится</h2>
-    <app-parts [parts]="parts$ | async"></app-parts>
+    <app-parts [parts]="parts"></app-parts>
   </div>
 </div>

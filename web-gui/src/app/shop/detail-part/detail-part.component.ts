@@ -1,10 +1,11 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
+import { BehaviorSubject, filter, Observable, Subscription, switchMap } from 'rxjs';
 
 import { ApiService } from '../../services/api.service';
 import { ObjectInformation, Part, PartQuantity, TranlatedKeyPart } from '../../interfaces';
 import { AddedPartsToCartEventService } from '../../share/services/added-parts-to-cart-event.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-detail-part',
@@ -19,9 +20,14 @@ export class DetailPartComponent implements OnDestroy {
   part: Part = null;
   private _loading = new BehaviorSubject(true);
   loading$ = this._loading.asObservable();
+  similarParts$: Observable<Part[]> = this.authService.userId$.pipe(
+    filter(id => !!id),
+    switchMap(id => this.service.getPersonalOffers(Number(id)))
+  );
 
   constructor(
-    private activateRoute: ActivatedRoute,
+    activateRoute: ActivatedRoute,
+    private authService: AuthService,
     private service: ApiService,
     private addedPartsToCartEventService: AddedPartsToCartEventService,
   ) {

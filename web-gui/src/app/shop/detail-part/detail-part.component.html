@@ -44,7 +44,8 @@
     <p>{{part.description}}</p>
   </div>
 
-  <div class="similar-parts-container">
-    <h2>Похожие запчасти</h2>
+  <div class="similar-parts-container" *ngIf="(similarParts$ | async) as parts">
+    <h2>Возможно, вам понравится</h2>
+    <app-parts [parts]="parts"></app-parts>
   </div>
 </div>

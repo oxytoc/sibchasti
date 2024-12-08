@@ -29,6 +29,7 @@ export class PersonalPageComponent {
     tap(orders => {
       // const partIds = orders.flatMap(order => order.partQuantities).map(pq => pq.partId);
       this.dataSource.data = orders.flatMap(order => order.partQuantities.map(pq => ({
+        id: pq.part.id,
         partImageUrl: `${this.service.baseUrl}/databaseFile/${pq.part.partImageId}`,
         description: pq.part.description,
         price: pq.part.price,

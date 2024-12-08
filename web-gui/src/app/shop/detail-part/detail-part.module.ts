@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { DetailPartComponent } from './detail-part.component';
 import { MaterialModule } from '../../share/material/material.module';
+import { PartsModule } from '../../share/parts/parts.module';
 
 const routes: Routes = [{ path: '', component: DetailPartComponent }];
 
@@ -12,6 +13,7 @@ const routes: Routes = [{ path: '', component: DetailPartComponent }];
   imports: [
     CommonModule,
     MaterialModule,
+    PartsModule,
     RouterModule.forChild(routes),
   ],
   exports: [DetailPartComponent]
