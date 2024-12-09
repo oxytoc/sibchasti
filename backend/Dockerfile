@@ -12,4 +12,4 @@ COPY . .
 
 RUN npm run build
 
-CMD [ "node", "dist/main.js" ]
+CMD npx typeorm migration:run -d dist/dataSource.js && node dist/main
