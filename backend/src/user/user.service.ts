@@ -4,7 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { from, Observable } from 'rxjs';
+import { from, Observable, switchMap } from 'rxjs';
 
 @Injectable()
 export class UserService {
@@ -13,18 +13,15 @@ export class UserService {
   ) {}
 
   createUser(createUserDto: CreateUserDto): Observable<User> {
-    const user: User = new User();
-    user.firstName = createUserDto.firstName;
-    user.secondName = createUserDto.secondName;
-    user.thirdName = createUserDto.thirdName;
-    user.phoneNumber = createUserDto.phoneNumber;
-    user.age = createUserDto.age;
-    user.email = createUserDto.email;
-    user.username = createUserDto.username;
-    user.password = createUserDto.password;
-    user.gender = createUserDto.gender;
-    user.role = createUserDto.role;
-    return from(this.userRepository.save(user));
+    const user = this.userRepository.create({ ...createUserDto });
+    return from(this.findUser(createUserDto.username)).pipe(
+      switchMap(existingUser => {
+        if (!!existingUser) {
+          throw new Error('Username already exists');
+        }
+        return from(this.userRepository.save(user));
+      }),
+    )
   }
 
   findAllUser(): Observable<User[]> {

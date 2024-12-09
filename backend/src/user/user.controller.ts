@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -8,10 +8,14 @@ import { User } from './entities/user.entity';
 import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/role.enum';
 import { Private, Public } from 'src/auth/public-stragegy';
+import { AuthService } from 'src/auth/auth.service';
 
 @Controller('')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private authService: AuthService
+  ) {}
 
   @Public()
   @Get()
@@ -33,8 +37,8 @@ export class UserController {
 
   @Post("create")
   signUp(@Body() createUser: CreateUserDto) {
-    return this.userService.createUser(createUser);
-  }
+    return this.authService.signUp(createUser).pipe(map(user => user.username));
+  }  
 
   @Post("create")
   remove(@Param('id') ids: string[]): Observable<{affected?: number}> {
