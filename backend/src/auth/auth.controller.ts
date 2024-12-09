@@ -1,15 +1,33 @@
-import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus, OnModuleInit } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AuthService } from './auth.service';
 import { Public } from './public-stragegy';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { User } from 'src/user/entities/user.entity';
+import { Role } from 'src/roles/role.enum';
+import { lastValueFrom } from 'rxjs';
 
 
 @Controller("")
 @ApiTags("auth")
-export class AuthController {
-  constructor(private authService: AuthService) {} 
+export class AuthController implements OnModuleInit {
+  constructor(private authService: AuthService) {}
+
+  async onModuleInit() {
+    const user: CreateUserDto = {
+      username: 'admin',
+      email: 'admin@example.com',
+      age: 30,
+      password: 'admin',
+      firstName: 'John',
+      secondName: 'Doe',
+      thirdName: 'Johnson',
+      phoneNumber: '1234567890',
+      gender: 'm',
+      role: Role.Admin,
+    }
+    await lastValueFrom(this.authService.signUp(user));
+  }
   
   @Public()
   @HttpCode(HttpStatus.OK)
