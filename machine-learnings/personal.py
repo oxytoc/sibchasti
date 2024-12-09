@@ -42,7 +42,10 @@ def load_data_from_db():
 def train_model():
     # Загружаем данные
     part_df, purchase_df = load_data_from_db()
-
+    if (len(part_df) == 0):
+        return
+    if (len(purchase_df) == 0):
+        return
     # Векторизация описаний товаров
     tfidf = TfidfVectorizer(stop_words=russian_stop_words)
     tfidf_matrix = tfidf.fit_transform(part_df['description'])

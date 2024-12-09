@@ -75,6 +75,8 @@ def forecast_demand(time_series_data, period):
 # Функция для обучения моделей
 def train_forecast():
     df = load_order_data()
+    if (len(df) == 0):
+        return
     time_series_data = preprocess_data(df)
     train_models(time_series_data)
 
