@@ -54,7 +54,7 @@ export class AuthService {
     return this.usersService.findUser(payload.username).pipe(
       switchMap(user => {
         if (user) {
-          throw new UnauthorizedException('Username already exists');
+          return of(user);
         }
         return this.usersService.createUser(payload);
       }),
