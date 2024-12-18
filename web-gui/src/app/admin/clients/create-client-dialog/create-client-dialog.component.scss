@@ -2,3 +2,9 @@ mat-dialog-actions {
   display: flex;
   justify-content: center;
 }
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}

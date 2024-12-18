@@ -32,7 +32,7 @@ def load_data_from_db():
         JOIN "part_quantity" pq ON opq."partQuantityId" = pq.id
         JOIN "part" p ON pq."partId" = p.id
         JOIN "user" u ON o."user_id" = u.id
-        WHERE o."orderStatus" = 'closed';
+        WHERE o."orderStatus" = 'closed' or o."orderStatus" = 'open';
     """
     part_df = pd.read_sql_query(part_query, connection)
     purchase_df = pd.read_sql_query(purchase_query, connection)

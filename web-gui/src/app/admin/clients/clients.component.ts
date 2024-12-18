@@ -87,7 +87,7 @@ export class ClientsComponent implements AfterViewInit, OnDestroy {
 
   createClient(): void {
     this.dialog.open(CreateClientDialogComponent, {
-      maxWidth: '260px'
+      maxWidth: '35vw'
     }).afterClosed()
     .pipe(filter(value => !!value))
     .subscribe(() => {

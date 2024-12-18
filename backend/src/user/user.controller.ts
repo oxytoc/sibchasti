@@ -23,6 +23,7 @@ export class UserController {
     return this.userService.findAllUser();
   }
 
+  @Private()
   @Post("findOne")
   findOne(@Body() findOneDto: {id: string}): Observable<User> {
     return this.userService.viewUser(+findOneDto.id);
@@ -35,12 +36,14 @@ export class UserController {
     return this.userService.updateUser(+id, updateUserDto);
   }
 
+  @Private()
   @Post("create")
   signUp(@Body() createUser: CreateUserDto) {
     return this.authService.signUp(createUser).pipe(map(user => user.username));
   }  
 
-  @Post("create")
+  @Private()
+  @Post("remove")
   remove(@Param('id') ids: string[]): Observable<{affected?: number}> {
     return this.userService.removeUser(ids);
   }

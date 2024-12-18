@@ -64,7 +64,11 @@ export class AnalyzePartsComponent {
   
   makePredictForecast(): void {
     const period: number = this.form.get('period')?.value;
-    this.sub.add(this.service.makePredictForecast(period).subscribe());
+    this.sub.add(this.service.makePredictForecast(period).subscribe(
+      () => {
+        this._update.next(true);
+      }
+    ));
   }
 
   retrainPredictForecast(): void {

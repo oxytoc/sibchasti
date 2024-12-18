@@ -85,7 +85,7 @@ export class CartComponent implements OnDestroy {
   buy() {
     const order: UserOrder = {
       orderStatus: OrderStatus.open,
-      partQuantities: this.selection.selected.map(part => ({ partId: part.id, quantity: part.quantity }))
+      partQuantity: this.selection.selected.map(part => ({ partId: part.id, quantity: part.quantity }))
     }
 
     this.service.makeUserOrder(order).subscribe({

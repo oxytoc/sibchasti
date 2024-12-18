@@ -10,6 +10,7 @@ import { routes } from './app.routes';
 import { MainModule } from './main/main.module';
 import { TokenInterceptorService } from './services/token-interceptor.service';
 import { AuthService } from './services/auth.service';
+import { ErrorDialogModule } from './share/error-dialog/error-dialog.module';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { AuthService } from './services/auth.service';
     BrowserAnimationsModule,
     MainModule,
     HttpClientModule,
+    ErrorDialogModule
   ],
   providers: [
     {

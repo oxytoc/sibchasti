@@ -66,7 +66,7 @@ export interface Order {
 
 export interface UserOrder {
   orderStatus: OrderStatus,
-  partQuantities: PartQuantity[];
+  partQuantity: PartQuantity[];
 }
 
 export interface PartQuantity {
