@@ -79,10 +79,15 @@ export interface PartIdWithDemands {
   demands: string[];
 }
 
-export interface PredictParts {
-  id: number,
-  period: number,
-  forecast: PartIdWithDemands[]
+export interface PartForecast {
+  partId: number;
+  partName: string;
+  forecasts: DailyForecast[];
+}
+
+export interface DailyForecast {
+  date: string; // Формат "YYYY-MM-DD"
+  predictedQuantity: number;
 }
 
 export interface LoginInterface {

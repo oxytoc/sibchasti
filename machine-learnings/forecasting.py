@@ -34,20 +34,43 @@ def load_order_data():
     return df
 
 # Подготовка данных для прогнозирования
+# def preprocess_data(df):
+#     df['order_date'] = pd.to_datetime(df['order_date'])
+#     df = df.groupby(['part_id', 'part_name', pd.Grouper(key='order_date', freq='ME')])['quantity'].sum().reset_index()
+#     time_series_data = {}
+#     for part_id in df['part_id'].unique():
+#         part_df = df[df['part_id'] == part_id].copy()
+#         part_df = part_df.set_index('order_date').resample('M').sum().fillna(0)
+#         time_series_data[part_id] = part_df['quantity'].values
+#     return time_series_data
+
 def preprocess_data(df):
     df['order_date'] = pd.to_datetime(df['order_date'])
-    df = df.groupby(['part_id', 'part_name', pd.Grouper(key='order_date', freq='ME')])['quantity'].sum().reset_index()
+    # Группируем по дням
+    df = df.groupby(['part_id', 'part_name', pd.Grouper(key='order_date', freq='D')])['quantity'].sum().reset_index()
     time_series_data = {}
     for part_id in df['part_id'].unique():
         part_df = df[df['part_id'] == part_id].copy()
-        part_df = part_df.set_index('order_date').resample('M').sum().fillna(0)
-        time_series_data[part_id] = part_df['quantity'].values
+        # Устанавливаем индекс как дата и ресемплируем по дням, заполняя пропуски нулями
+        part_df = part_df.set_index('order_date').resample('D').sum().fillna(0)
+        time_series_data[part_id] = part_df
     return time_series_data
 
 # Обучение моделей
+# def train_models(time_series_data):
+#     model_dict = {}
+#     for part_id, data in time_series_data.items():
+#         X = np.arange(len(data)).reshape(-1, 1)
+#         y = data
+#         model = LinearRegression()
+#         model.fit(X, y)
+#         model_dict[part_id] = model
+#     joblib.dump(model_dict, 'model/demand_models.joblib')
+#     print("Модели обучены и сохранены.")
 def train_models(time_series_data):
     model_dict = {}
-    for part_id, data in time_series_data.items():
+    for part_id, part_df in time_series_data.items():
+        data = part_df['quantity'].values
         X = np.arange(len(data)).reshape(-1, 1)
         y = data
         model = LinearRegression()
@@ -60,16 +83,41 @@ def train_models(time_series_data):
 def load_models():
     return joblib.load('model/demand_models.joblib')
 
-def forecast_demand(time_series_data, period):
+# def forecast_demand(time_series_data, period):
+#     model_dict = load_models()
+#     predictions = {}
+#     print(model_dict, time_series_data.items(), flush=True)
+#     for part_id, data in time_series_data.items():
+#         model = model_dict.get(part_id)
+#         if model:
+#             future_X = np.arange(len(data), len(data) + period).reshape(-1, 1)
+#             predicted_demand = model.predict(future_X)
+#             predictions[part_id] = predicted_demand
+#     return predictions
+def forecast_demand(time_series_data, period_days):
     model_dict = load_models()
     predictions = {}
-    print(model_dict, time_series_data.items(), flush=True)
-    for part_id, data in time_series_data.items():
+    
+    for part_id, part_df in time_series_data.items():
         model = model_dict.get(part_id)
         if model:
-            future_X = np.arange(len(data), len(data) + period).reshape(-1, 1)
-            predicted_demand = model.predict(future_X)
-            predictions[part_id] = predicted_demand
+            # Генерируем даты прогноза
+            last_date = pd.to_datetime(part_df.index[-1])
+            future_dates = pd.date_range(
+                start=last_date + pd.Timedelta(days=1),
+                periods=period_days
+            )
+            
+            # Прогнозируем
+            future_X = np.arange(len(part_df), len(part_df) + period_days).reshape(-1, 1)
+            predicted = model.predict(future_X)
+            
+            # Форматируем результат
+            predictions[part_id] = [{
+                'date': date.strftime('%Y-%m-%d'),
+                'predicted_quantity': max(0, float(quantity))  # Обеспечиваем неотрицательные значения
+            } for date, quantity in zip(future_dates, predicted)]
+    
     return predictions
 
 # Функция для обучения моделей
@@ -81,12 +129,28 @@ def train_forecast():
     train_models(time_series_data)
 
 # Функция для прогнозирования
-def predict_forecast(period):
+# def predict_forecast(period):
+#     df = load_order_data()
+#     time_series_data = preprocess_data(df)
+#     predictions = forecast_demand(time_series_data, period)
+#     print(predictions)
+#     return predictions
+def predict_forecast(period_days):
     df = load_order_data()
+    if df.empty:
+        return {}
+        
     time_series_data = preprocess_data(df)
-    predictions = forecast_demand(time_series_data, period)
-    print(predictions)
-    return predictions
+    predictions = forecast_demand(time_series_data, period_days)
+    
+    # Добавляем названия деталей
+    part_names = df[['part_id', 'part_name']].drop_duplicates().set_index('part_id')['part_name']
+    return {
+        part_id: {
+            'part_name': part_names.get(part_id, 'Unknown Part'),
+            'forecasts': forecasts
+        } for part_id, forecasts in predictions.items()
+    }
 
 if __name__ == "__main__":
     # Выберите нужную функцию для запуска: обучение или прогнозирование

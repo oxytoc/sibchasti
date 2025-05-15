@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { PartIdWithDemands } from "../forecasts.service";
+import { PeriodWithForecast } from "../forecasts.service";
 
 
 @Entity()
@@ -8,11 +8,14 @@ export class Forecast {
     id: number;
 
   @Column()
-    period: number;
+    partId: number;
+
+  @Column()
+    partName: string;
 
   @Column({
     type: 'json',
     nullable: true,
   })
-    forecast: PartIdWithDemands[];
+    forecast: PeriodWithForecast[];
 }

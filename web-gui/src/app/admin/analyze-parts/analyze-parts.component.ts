@@ -6,7 +6,9 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { BehaviorSubject, Observable, Subscription, switchMap, tap } from 'rxjs';
 
 import { ApiService } from '../../services/api.service';
-import { PredictParts } from '../../interfaces';
+import { DailyForecast, PartForecast } from '../../interfaces';
+import { MatDialog } from '@angular/material/dialog';
+import { ForecastComponent } from './forecast/forecast.component';
 
 @Component({
   selector: 'app-analyze-parts',
@@ -17,18 +19,18 @@ export class AnalyzePartsComponent {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  dataSource: MatTableDataSource<PredictParts> = new MatTableDataSource();
+  dataSource: MatTableDataSource<PartForecast> = new MatTableDataSource();
 
   private _isLoading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   isLoading$: Observable<boolean> = this._isLoading.asObservable();
   private _update: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  updateDataSource$: Observable<PredictParts[]> = this._update.asObservable()
+  updateDataSource$: Observable<PartForecast[]> = this._update.asObservable()
     .pipe(
       tap(() => this._isLoading.next(true)),
       switchMap(() => this.service.getForecastDemands()),
     )
 
-  displayedColumns: string[] = ['id', 'period', 'forecast' ];
+  displayedColumns: string[] = [ 'id', 'partName' ];
   
   sub: Subscription = new Subscription();
 
@@ -39,6 +41,7 @@ export class AnalyzePartsComponent {
   constructor (
     private service: ApiService,
     private formBuilder: FormBuilder,
+    private dialog: MatDialog
   ) { }
 
   ngAfterViewInit(): void {
@@ -73,6 +76,14 @@ export class AnalyzePartsComponent {
 
   retrainPredictForecast(): void {
     this.sub.add(this.service.retrainForecast().subscribe());
+  }
+
+  openForecastDialog(row: DailyForecast): void {
+    this.dialog.open(ForecastComponent, {
+      // maxWidth: '35vw'
+      data: row
+    }).afterClosed()
+    .subscribe();
   }
 
   ngOnDestroy(): void {

@@ -33,15 +33,42 @@ def retrain():
 
 @app.route('/forecaste', methods=['POST'])
 def forecast():
-    print(request.json.get('period'), flush=True)
-    data = request.json
-    period = data.get('period')
-    if not period:
-        return jsonify({'error': 'period is required'}), 400
-    forecast = predict_forecast(period)
-    forecast_cleaned = {int(k): [float(v) for v in val] for k, val in forecast.items()}
-    print(forecast_cleaned)
-    return forecast_cleaned
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'Request body is required'}), 400
+            
+        period_days = data.get('period')
+        if not period_days or not isinstance(period_days, int):
+            return jsonify({'error': 'Valid period (integer) is required'}), 400
+
+        # Получаем прогноз в новом формате
+        predictions = predict_forecast(period_days)
+        
+        # Преобразуем данные для фронтенда
+        result = []
+        for part_id, part_data in predictions.items():
+            # Формируем запись для каждой детали
+            part_entry = {
+                'partId': part_id,
+                'partName': part_data.get('part_name', 'Unknown Part'),
+                'forecasts': []
+            }
+            
+            # Добавляем прогнозы по дням
+            for forecast in part_data['forecasts']:
+                part_entry['forecasts'].append({
+                    'date': forecast['date'],
+                    'predictedQuantity': float(forecast['predicted_quantity'])
+                })
+            
+            result.append(part_entry)
+
+        return jsonify(result)
+
+    except Exception as e:
+        print(f"Error in forecast: {str(e)}", flush=True)
+        return jsonify({'error': 'Internal server error', 'details': str(e)}), 500
 
 @app.route('/retrain-forecast', methods=['POST'])
 def retrain_forecast():

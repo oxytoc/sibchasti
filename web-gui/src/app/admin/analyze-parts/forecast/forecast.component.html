@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>Прогноз продаж</h2>
+
+<mat-dialog-content>
+    <div *ngIf="data">
+      <ngx-charts-line-chart
+        [view]="[1200, 400]"
+        [results]="chartData"
+        [xAxisTickFormatting]="xAxisTickFormatting"
+        [xAxis]="true"
+        [yAxis]="true"
+        [legend]="true"
+        [showXAxisLabel]="true"
+        [showYAxisLabel]="true"
+        xAxisLabel="Дата"
+        yAxisLabel="Продажи"
+        [tooltipDisabled]="false">
+      </ngx-charts-line-chart>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Закрыть</button>
+</mat-dialog-actions>

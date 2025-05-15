@@ -17,15 +17,22 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 
 import { AnalyzePartsComponent } from './analyze-parts.component';
 import { ForecastPipe } from '../../common/forecast.pipe';
+import { ForecastComponent } from './forecast/forecast.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
-const routes: Routes = [{ path: '', component: AnalyzePartsComponent }];
+const routes: Routes = [
+  {path: '', component: AnalyzePartsComponent },
+  { path: 'forecast', component: ForecastComponent }
+];
 
 @NgModule({
   declarations: [
-    AnalyzePartsComponent
+    AnalyzePartsComponent,
+    ForecastComponent
   ],
   providers: [provideNativeDateAdapter()],
   imports: [
+    NgxChartsModule,
     CommonModule,
     RouterModule.forChild(routes),
     MatTableModule,

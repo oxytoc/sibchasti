@@ -6,9 +6,15 @@ import { Repository } from 'typeorm';
 
 import { Forecast } from './entity/forecast.entity';
 
-export interface PartIdWithDemands {
-  partId: number;
-  demands: string[];
+export interface PeriodWithForecast {
+  partId: number,
+  partName: string,
+  forecasts: DateWithForecast[];
+}
+
+export interface DateWithForecast {
+  date: string,
+  predictedQuantity: number
 }
 
 @Injectable()
@@ -25,15 +31,11 @@ export class ForecastsService {
   getPredictForecast(period: number): Observable<any> {
     const url = `${process.env.ML_SERVICE_URL}/forecaste`;
 
-    return this.httpService.post<Record<string, string[]>>(url, { period: period }).pipe(
-      // actual return data: { '2': [ 6, 6 ] } for period: 2
+    return this.httpService.post<PeriodWithForecast[]>(url, { period: period }).pipe(
+      // actual return data: { '1': 'date': '2023-11-01', 'predictedQuantity': 10 } for period: 1
       map((forecastResponse) => forecastResponse.data),
       switchMap(forecast => {
-        const partIdWithForecast: PartIdWithDemands[] = Object.keys(forecast).map(key => ({
-          partId: parseInt(key),
-          demands: forecast[key]
-        }));
-        const forecastCreate = this.forecastRepository.create({ forecast: partIdWithForecast, period: period});
+        const forecastCreate = this.forecastRepository.create(forecast);
         return from(this.forecastRepository.save(forecastCreate)).pipe(
           catchError(err => {
             throw new HttpException({
