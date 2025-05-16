@@ -46,14 +46,16 @@ def load_order_data():
 
 def preprocess_data(df):
     df['order_date'] = pd.to_datetime(df['order_date'])
-    # Группируем по дням
     df = df.groupby(['part_id', 'part_name', pd.Grouper(key='order_date', freq='D')])['quantity'].sum().reset_index()
+    
+    # Явное преобразование part_id в int
+    df['part_id'] = df['part_id'].astype(int)
+    
     time_series_data = {}
     for part_id in df['part_id'].unique():
         part_df = df[df['part_id'] == part_id].copy()
-        # Устанавливаем индекс как дата и ресемплируем по дням, заполняя пропуски нулями
         part_df = part_df.set_index('order_date').resample('D').sum().fillna(0)
-        time_series_data[part_id] = part_df
+        time_series_data[int(part_id)] = part_df  # Преобразование ключа в int
     return time_series_data
 
 # Обучение моделей
@@ -101,22 +103,22 @@ def forecast_demand(time_series_data, period_days):
     for part_id, part_df in time_series_data.items():
         model = model_dict.get(part_id)
         if model:
-            # Генерируем даты прогноза
-            last_date = pd.to_datetime(part_df.index[-1])
-            future_dates = pd.date_range(
-                start=last_date + pd.Timedelta(days=1),
-                periods=period_days
-            )
+            # Преобразуем numpy.int64 в int
+            part_id_int = int(part_id)
             
             # Прогнозируем
-            future_X = np.arange(len(part_df), len(part_df) + period_days).reshape(-1, 1)
+            n = len(part_df)
+            future_X = np.arange(n, n + period_days).reshape(-1, 1)
             predicted = model.predict(future_X)
             
-            # Форматируем результат
-            predictions[part_id] = [{
+            # Преобразуем numpy-типы
+            predictions[part_id_int] = [{
                 'date': date.strftime('%Y-%m-%d'),
-                'predicted_quantity': max(0, float(quantity))  # Обеспечиваем неотрицательные значения
-            } for date, quantity in zip(future_dates, predicted)]
+                'predicted_quantity': float(quantity.item())  # Конвертация в Python float
+            } for date, quantity in zip(
+                pd.date_range(part_df.index[-1] + pd.Timedelta(days=1), periods=period_days),
+                predicted
+            )]
     
     return predictions
 

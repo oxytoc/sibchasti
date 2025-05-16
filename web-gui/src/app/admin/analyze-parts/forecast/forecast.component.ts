@@ -10,23 +10,19 @@ import { formatDate } from '@angular/common';
   styleUrl: './forecast.component.scss'
 })
 export class ForecastComponent {
+  chartData: any[] = []
     constructor(
       @Inject(MAT_DIALOG_DATA) public data: PartForecast
-    ) { }
-  
-    get chartData() {
-    if (!this.data?.forecasts?.length) return [];
-
-    return [{
-      name: 'Прогноз продаж',
+    ) {
+      if (this.data?.forecasts?.length) {
+      this.chartData = [{
+      name: `Прогноз спроса на товар ${data.partName}`,
       series: this.data.forecasts.map(f => ({
         name: f.date,
         value: f.predictedQuantity
       }))
-    }];
-  }
-
-  xAxisTickFormatting = (value: string) => {
-    return formatDate(value, 'mediumDate', 'ru-RU');
-  }
+    }]
+      }
+    }
 }
+;

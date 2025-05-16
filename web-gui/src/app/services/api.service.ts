@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, map } from 'rxjs';
 
-import { User, Order, Part, PredictParts, OrderStatus, UserOrder } from '../interfaces';
+import { User, Order, Part, PartForecast, OrderStatus, UserOrder } from '../interfaces';
 import { ShowErrorInDialogService } from '../share/services/show-error-in-dialog.service';
 
 interface ServerPartQuantity {
@@ -104,9 +104,9 @@ export class ApiService {
     return this.http.post(path, {}).pipe(catchError(error => this.errorService.showErrorMessage(error.error.message)));;
   }
 
-  getForecastDemands(): Observable<PredictParts[]>{
+  getForecastDemands(): Observable<PartForecast[]>{
     const path = this.baseUrl + '/forecast';
-    return this.http.get<PredictParts[]>(path).pipe(catchError(error => this.errorService.showErrorMessage(error.error.message)));;
+    return this.http.get<PartForecast[]>(path).pipe(catchError(error => this.errorService.showErrorMessage(error.error.message)));;
   }
 
   getPersonalOffers(userId: number): Observable<Part[]> {

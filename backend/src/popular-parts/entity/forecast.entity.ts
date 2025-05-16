@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { PeriodWithForecast } from "../forecasts.service";
+import { DateWithForecast, PeriodWithForecast } from "../forecasts.service";
 
 
 @Entity()
@@ -17,5 +17,5 @@ export class Forecast {
     type: 'json',
     nullable: true,
   })
-    forecast: PeriodWithForecast[];
+    forecasts: DateWithForecast[];
 }

@@ -1,18 +1,17 @@
-<h2 mat-dialog-title>Прогноз продаж</h2>
+<h2 mat-dialog-title>{{ 'Прогноз спроса на товар: ' + data.partName }}</h2>
 
 <mat-dialog-content>
     <div *ngIf="data">
       <ngx-charts-line-chart
         [view]="[1200, 400]"
         [results]="chartData"
-        [xAxisTickFormatting]="xAxisTickFormatting"
         [xAxis]="true"
         [yAxis]="true"
         [legend]="true"
         [showXAxisLabel]="true"
         [showYAxisLabel]="true"
         xAxisLabel="Дата"
-        yAxisLabel="Продажи"
+        yAxisLabel="Спрос"
         [tooltipDisabled]="false">
       </ngx-charts-line-chart>
     </div>

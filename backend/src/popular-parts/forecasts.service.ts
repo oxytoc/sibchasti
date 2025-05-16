@@ -35,6 +35,7 @@ export class ForecastsService {
       // actual return data: { '1': 'date': '2023-11-01', 'predictedQuantity': 10 } for period: 1
       map((forecastResponse) => forecastResponse.data),
       switchMap(forecast => {
+        console.log(forecast);
         const forecastCreate = this.forecastRepository.create(forecast);
         return from(this.forecastRepository.save(forecastCreate)).pipe(
           catchError(err => {
