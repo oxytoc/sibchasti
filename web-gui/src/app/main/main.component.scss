@@ -14,6 +14,15 @@
   padding: 10px 20px;
   background: #fff;
 
+  .start {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 50px;
+  }
+
   p {
     margin: 0;
   }

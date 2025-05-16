@@ -1,0 +1,25 @@
+.news-card{
+  margin-top: 4px;
+  height: fit-content;
+}
+
+.title{
+  font-weight: bold;
+}
+
+.action-buttons{
+  text-align: center;
+}
+
+.news-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 10px 0;
+  background: #fff;
+  min-height: 95%;
+}
+
+:host {
+  flex-grow: 2;
+}

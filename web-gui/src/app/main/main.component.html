@@ -1,7 +1,35 @@
 <header class="main">
-  <div class="logo" routerLink="">
-    <mat-icon class="icon">directions_car</mat-icon>
-    <h1 class="logo-text">СибЧасти</h1>
+  <div class="start">
+    <div class="logo" routerLink="">
+      <mat-icon class="icon">directions_car</mat-icon>
+      <h1 class="logo-text">СибЧасти</h1>
+    </div>
+
+    <div class="header-action">
+      <div class="action" routerLink="/news">
+        <a class="action-text">
+          <span>Новости</span>
+        </a>
+      </div>
+
+      <div class="action" routerLink="/promo">
+        <a class="action-text">
+          <span>Акции</span>
+        </a>
+      </div>
+
+      <div class="action" routerLink="/articles">
+        <a class="action-text">
+          <span>Статьи</span>
+        </a>
+      </div>
+
+      <div class="action" routerLink="/about-us">
+        <a class="action-text">
+          <span>О нас</span>
+        </a>
+      </div>
+    </div>
   </div>
 
   <ng-container *ngIf="userInfo$ | async as user; else exitApp">

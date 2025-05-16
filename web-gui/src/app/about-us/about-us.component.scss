@@ -1,0 +1,23 @@
+:host {
+  flex-grow: 2;
+}
+
+.about-us-container {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  background: #fff;
+  min-height: 95%;
+  justify-content: center;
+
+  .about-us {
+    padding: 10px 15%;
+  }
+}
+
+.mat-card-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 15px;
+}

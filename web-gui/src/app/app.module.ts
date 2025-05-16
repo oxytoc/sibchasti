@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
@@ -34,6 +34,7 @@ import { ErrorDialogModule } from './share/error-dialog/error-dialog.module';
       useClass: TokenInterceptorService,
       multi: true,
     },
+    {provide: LOCALE_ID, useValue: 'ru-RU'}
   ],
   bootstrap: [AppComponent],
 })
